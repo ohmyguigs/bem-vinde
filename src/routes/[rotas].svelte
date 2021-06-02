@@ -29,7 +29,9 @@
         hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
     if (hex.length !== 6) {
-        throw new Error('Invalid HEX color.');
+        // throw new Error('Invalid HEX color.');
+        // not to fail, return defaul color for bg
+        return '#FFFFFF';
     }
     // invert color components
     var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),

@@ -36,3 +36,7 @@ npm run build
 ```
 
 > You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+
+Since i'm using static-adapter, after installing `npm i` you have to go to `node_modules/@sveltejs/adapter-static` folder and replace index.js with the [most recent one here](https://github.com/sveltejs/kit/tree/master/packages/adapter-static).
+
+Than run `npm run deploy` to publish in gh-pages.
