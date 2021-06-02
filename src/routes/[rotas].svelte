@@ -40,6 +40,7 @@
   }
   export let bgColor = invertColor(pageName);
 
+  // @ts-ignore
   pageName = pageName ? pageName.startsWith('#') ? pageName : `#${pageName}` : '#000';
   bgColor = bgColor.startsWith('#') ? bgColor : `#${bgColor}`;
 
