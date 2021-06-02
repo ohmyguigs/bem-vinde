@@ -20,12 +20,13 @@
 
 <div id="index--container">
   <h1>Olar e bem vinde ao meu site!</h1>
-  <p>tente ir para <a href="{base}/FF0000">alguma pagina</a>, que seja um HEX de cor como #FF0000</p>
-  <p>tente ir para <a href="{base}/come-🥑-bem">alguma pagina</a>, que funciona até com emoji 🥑</p>
+  <p>teste de rota <a href="{base}/come-🥑-bem">come-🥑-bem</a>, que funciona até com emoji</p>
   <br/>
   <button on:click={handleClick}>
     Come {count} {count === 1 ? 'abacate' : 'abacates'} 🥑✨
   </button>
+  <br/><br><br>
+  <p>tente ir para <a href="{base}/FF0000">alguma pagina</a>, que seja um HEX de cor como #FF0000</p>
 </div>
 
 <style>
