@@ -18,8 +18,8 @@ const config = {
 
 		// Comment the paths if wants to run in dev mode.
 		paths: {
-			base: '/svelte-kit-blog-demo',
-			assets: '/svelte-kit-blog-demo'
+			base: '/bem-vinde',
+			assets: '/bem-vinde'
 		},
 
 		// hydrate the <div id="svelte"> element in src/app.html

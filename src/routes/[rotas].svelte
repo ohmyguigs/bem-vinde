@@ -1,5 +1,6 @@
 <!-- src/routes/[rotas].svelte -->
 <script context="module">
+  export const prerender = true;
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
@@ -14,6 +15,7 @@
 </script>
 
 <script>
+  import { base } from '$app/paths';
 	export let pageName;
   function padZero(str, len) {
     len = len || 2;
@@ -61,7 +63,7 @@
   </h1>
   <p>
     Tente entrar numa pagina que seja um HEX de cor assim:
-    <a href="/ff3e00">#ff3e00</a>
+    <a href="{base}/ff3e00">#ff3e00</a>
   </p>
   <p>
     Deveria carregar o titulo com a cor da rota e o fundo da cor invertida!
