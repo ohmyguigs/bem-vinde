@@ -5,7 +5,6 @@
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, fetch, session, context }) {
-    console.log('load with rotas: ', page.params['rotas'])
     return {
       props: {
         pageName: page.params['rotas'],
@@ -44,8 +43,6 @@
       }, 42);
     }
   }
-
-  console.log('rendering [rotas]: ', { bgColor, pageName, allColors, notAColorPage });
 </script>
 
 <svelte:head>

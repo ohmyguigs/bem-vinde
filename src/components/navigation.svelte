@@ -1,5 +1,6 @@
 <!-- src/components/navigation.svelte -->
 <script>
+  import { invertColor } from '../utils'
   export const prerender = true;
   export let base = '';
   const removeHash = hex => hex.replace('#', '');
@@ -13,9 +14,21 @@
     colors.push("#" + ("000000" + randomColor.toString(16)).slice(-6));
   }
 
+  const H1_COlOR_FALLBACK = '#fabdaf';
+  let hoveredColor = H1_COlOR_FALLBACK;
+  function enter(color) {
+		hoveredColor = invertColor(color) || H1_COlOR_FALLBACK;
+	}
+
+	function leave() {
+		hoveredColor = H1_COlOR_FALLBACK;
+	}
+
 </script>
 
-<h1>~ C O R E S - A L E A T Ó R I A S ? ~</h1>
+<h1 style="--navigation-h1-color: {hoveredColor};">
+  ~ C O R E S - A L E A T Ó R I A S ? ~
+</h1>
 <div id="navigation--container">
   {#each colors as color}
     <div
@@ -26,6 +39,8 @@
         href={`${base}/${removeHash(color)}`}
         style="--navigation-link-color: {color}"
         aria-label={`link for color ${color}`}
+        on:mouseenter={() => enter(color)}
+        on:mouseleave={leave}
       >{color}</a>
     </div>
   {/each}
@@ -46,7 +61,7 @@
   }
 
   h1 {
-    color: #fabdaf;
+    color: var(--navigation-h1-color);
 		font-size: 2em;
     margin: 0;
   }

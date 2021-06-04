@@ -31,16 +31,6 @@
 </div>
 
 <style>
-  html {
-    background-color: teal;
-    box-sizing: border-box;
-    /* Prevent adjustments of font size after orientation changes in iOS */
-    -webkit-text-size-adjust: 100%;
-    word-break: normal;
-    -moz-tab-size: 4;
-    tab-size: 4;
-  }
-
   #index--container {
     text-align: center;
     margin: auto;
