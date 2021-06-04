@@ -17,10 +17,12 @@ const config = {
 		adapter: adapter(),
 
 		// Comment the paths if wants to run in dev mode.
-		// paths: {
-		// 	base: process.env.NODE_ENV == 'production' ? '/bem-vinde' : '',
-		// 	assets: process.env.NODE_ENV == 'production' ? '/bem-vinde' : '',
-		// },
+		paths: {
+			// base: process.env.NODE_ENV == 'production' ? '/bem-vinde' : '',
+			// assets: process.env.NODE_ENV == 'production' ? '/bem-vinde' : '',
+			base: '',
+			assets: '',
+		},
 
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
