@@ -21,8 +21,7 @@
 	export let pageName;
   export let bgColor = invertColor(pageName);
   export let allColors = generateAllColorsArray(MAXIMUM_COLORS_LOOP_SIZE);
-  export let count = 0;
-
+  let count = 0;
   // @ts-ignore
   pageName = pageName ? pageName.startsWith('#') ? pageName : `#${pageName}` : '#000';
   bgColor = bgColor.startsWith('#') ? bgColor : `#${bgColor}`;
@@ -46,7 +45,7 @@
     }
   }
 
-  console.log('render: ', { bgColor, pageName, allColors, notAColorPage })
+  console.log('rendering [rotas]: ', { bgColor, pageName, allColors, notAColorPage });
 </script>
 
 <svelte:head>

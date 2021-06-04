@@ -2,6 +2,7 @@
 <script>
   import { base } from '$app/paths';
   export const prerender = true;
+  import Navigation from '../components/navigation.svelte';
 
   let count = 0;
   function handleClick() {
@@ -26,10 +27,20 @@
     Come {count} {count === 1 ? 'abacate' : 'abacates'} 🥑✨
   </button>
   <br/><br><br>
-  <p>tente ir para <a href="{base}/FF0000">alguma pagina</a>, que seja um HEX de cor como #FF0000</p>
+  <Navigation base={base} />
 </div>
 
 <style>
+  html {
+    background-color: teal;
+    box-sizing: border-box;
+    /* Prevent adjustments of font size after orientation changes in iOS */
+    -webkit-text-size-adjust: 100%;
+    word-break: normal;
+    -moz-tab-size: 4;
+    tab-size: 4;
+  }
+
   #index--container {
     text-align: center;
     margin: auto;
