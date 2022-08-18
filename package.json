@@ -29,6 +29,13 @@
     ]
   },
   "dependencies": {
+    "@emotion/cache": "11.10.1",
+    "@emotion/react": "11.10.0",
+    "@emotion/server": "11.10.0",
+    "@emotion/styled": "11.10.0",
+    "@mui/icons-material": "5.8.4",
+    "@mui/material": "5.10.1",
+    "@plasmicapp/loader-nextjs": "1.0.175",
     "next": "12.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"

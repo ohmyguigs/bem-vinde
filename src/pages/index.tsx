@@ -1,11 +1,49 @@
 import Head from 'next/head';
-import Image from 'next/image';
+import {
+  PlasmicRootProvider,
+  PlasmicComponent,
+  ComponentRenderData,
+  extractPlasmicQueryData,
+} from '@plasmicapp/loader-nextjs';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
-import styles from '@/styles/Home.module.css';
+import AwesomeBanner from '@/components/AwesomeBanner';
+import { PLASMIC } from '@/utils/plasmic-init';
 
-export default function Home() {
+// Statically fetch the data needed to render Plasmic pages or components.
+export const getStaticProps = async () => {
+  // You can pass in multiple page paths or component names.
+  const plasmicData = await PLASMIC.fetchComponentData(`Home`, `AwesomeBanner`);
+  if (!plasmicData) {
+    throw new Error(`No Plasmic design found`);
+  }
+
+  // Cache the necessary data fetched for the page
+  const queryCache = await extractPlasmicQueryData(
+    <PlasmicRootProvider loader={PLASMIC} prefetchedData={plasmicData}>
+      <PlasmicComponent component={plasmicData.entryCompMetas[0].displayName} />
+    </PlasmicRootProvider>,
+  );
+  return {
+    props: {
+      plasmicData,
+      queryCache,
+      // ...
+    },
+
+    // Using incremental static regeneration, will invalidate this page
+    // after 300s (no deploy webhooks needed)
+    revalidate: 300,
+  };
+};
+
+export default function Home(props: {
+  plasmicData: ComponentRenderData;
+  queryCache?: Record<string, any>;
+}) {
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>TypeScript starter for Next.js</title>
         <meta
@@ -14,60 +52,19 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{` `}
-          <code className={styles.code}>src/pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=typescript-nextjs-starter"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=typescript-nextjs-starter"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Box sx={{ width: `100%` }}>
+        <PlasmicRootProvider
+          loader={PLASMIC}
+          prefetchedData={props.plasmicData}
+          prefetchedQueryData={props.queryCache}
         >
-          Powered by{` `}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
+          <PlasmicComponent component="Home" />
+        </PlasmicRootProvider>
+        <AwesomeBanner
+          title="Hello World"
+          subTitle="This is a simple example of a Plasmic component"
+        />
+      </Box>
+    </>
   );
 }
