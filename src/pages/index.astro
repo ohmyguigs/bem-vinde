@@ -1,9 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import BugsBanner from "../components/BugsBanner.astro";
 import Card from "../components/Card.astro";
 ---
 
 <Layout title="Welcome to Astro.">
+  <div class="bugswrapper">
+    <BugsBanner title="OhMyGuigs" subTitle="example banner test" />
+  </div>
   <main>
     <h1>Welcome to <span class="text-gradient">Astro</span></h1>
     <p class="instructions">
@@ -46,6 +50,14 @@ import Card from "../components/Card.astro";
     font-size: 3rem;
     font-weight: 800;
     margin: 0;
+  }
+  .bugswrapper {
+    background-color: #141414;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
   }
   .text-gradient {
     background-image: var(--accent-gradient);
