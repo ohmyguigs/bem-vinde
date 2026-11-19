@@ -1,20 +1,21 @@
-# build output
+# build
 dist/
-.output/
 
-# dependencies
+# dependências
 node_modules/
 
 # logs
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 
-
-# environment variables
+# variáveis de ambiente
 .env
-.env.production
+.env.*
 
-# macOS-specific files
+# relatórios temporários de auditoria (o REPORT.md é versionado; estes não)
+.lighthouse/
+.chrome-*/
+
+# macOS
 .DS_Store

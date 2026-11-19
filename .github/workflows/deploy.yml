@@ -1,29 +1,47 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Trigger the workflow every time you push to the `main` branch
-  # Using a different branch name? Replace `main` with your branch’s name
+  # Publica a cada push na main e permite rodar à mão pela aba Actions.
   push:
-    branches: [ gh-pages ]
-  
-# Allow this job to clone the repo and create a page deployment
+    branches: [main]
+  workflow_dispatch:
+
+# O token só precisa ler o código e publicar no Pages.
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Uma publicação por vez; não cancela uma que já está em andamento.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v4
-      - name: Install, build, and upload your site
-        uses: withastro/action@v2
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Node.js
+        uses: actions/setup-node@v7
         with:
-            path: . # The root location of your Astro project inside the repository. (optional)
-            node-version: 22 # The specific version of Node that should be used to build your site. Defaults to 16. (optional)
-            package-manager: yarn # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      # Testes (dados, gráficos, acessibilidade estática, contraste, workflow),
+      # build de produção e testes do artefato gerado.
+      - name: Verificar e construir
+        run: npm run check
+
+      - name: Enviar artefato do Pages
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
 
   deploy:
     needs: build
@@ -32,6 +50,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Publicar no GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
