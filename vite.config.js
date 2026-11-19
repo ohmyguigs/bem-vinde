@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { inlineCssPlugin } from './scripts/vite-plugins/inline-css.js';
+import { minifyHtmlPlugin } from './scripts/vite-plugins/minify-html.js';
 
 const prerenderFile = fileURLToPath(new URL('./src/lib/prerender.js', import.meta.url));
 
@@ -31,7 +33,8 @@ function prerenderCharts() {
 export default defineConfig({
   // Caminhos relativos: o build funciona no domínio próprio e em qualquer subcaminho.
   base: './',
-  plugins: [tailwindcss(), prerenderCharts()],
+  // Ordem importa: primeiro o CSS entra no HTML, depois o HTML inteiro é minificado.
+  plugins: [tailwindcss(), prerenderCharts(), inlineCssPlugin(), minifyHtmlPlugin()],
   build: {
     target: 'es2022',
     sourcemap: false,
