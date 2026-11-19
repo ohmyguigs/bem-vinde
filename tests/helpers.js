@@ -40,3 +40,57 @@ export function contrast(a, b) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
 }
+
+const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+const TEXT_BLOCKS = new Set(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'dl', 'blockquote']);
+
+/**
+ * Blocos de texto (p, h1-h6, dl, blockquote) do HTML e se cada um deve ser uma parada de Tab.
+ *
+ * Fora da regra (`excluded` com o motivo):
+ * - dentro de aria-hidden, hidden, .sr-only ou role="status" (não é lido nem visto);
+ * - cujo único conteúdo é um link ou botão (o controle já é a parada de Tab);
+ * - dentro de blockquote, que já é a parada de Tab do trecho inteiro.
+ */
+export function textBlocks(html) {
+  const source = html.replace(/<!--[\s\S]*?-->/g, '');
+  const stack = [];
+  const blocks = [];
+  for (const match of source.matchAll(/<(\/?)([a-zA-Z][\w-]*)([^>]*)>/g)) {
+    const [whole, closing, rawName, attributes] = match;
+    const name = rawName.toLowerCase();
+    if (VOID_TAGS.has(name) || whole.endsWith('/>')) continue;
+    if (!closing) {
+      const hiddenBy =
+        attr(attributes, 'aria-hidden') === 'true' ? 'aria-hidden'
+        : hasAttr(attributes, 'hidden') ? 'hidden'
+        : /(^|\s)sr-only(\s|$)/.test(attr(attributes, 'class') ?? '') ? 'sr-only'
+        : attr(attributes, 'role') === 'status' ? 'role=status'
+        : null;
+      stack.push({ name, attributes, start: match.index + whole.length, hiddenBy, open: match.index });
+      continue;
+    }
+    const index = stack.map((entry) => entry.name).lastIndexOf(name);
+    if (index < 0) continue;
+    const [entry] = stack.splice(index);
+    if (!TEXT_BLOCKS.has(name)) continue;
+    const inner = source.slice(entry.start, match.index).trim();
+    const ancestors = stack.slice(0, index);
+    let excluded = ancestors.find((a) => a.hiddenBy)?.hiddenBy ?? entry.hiddenBy ?? null;
+    if (!excluded && ancestors.some((a) => a.name === 'blockquote')) excluded = 'dentro de blockquote';
+    if (!excluded && ancestors.some((a) => ['a', 'button', 'summary', 'label'].includes(a.name))) excluded = 'dentro de controle';
+    if (!excluded) {
+      const only = inner.match(/^<(a|button)\b[\s\S]*<\/\1>$/);
+      const controls = inner.match(/<(a|button)\b/g) ?? [];
+      if (only && controls.length === 1) excluded = 'só um controle';
+    }
+    blocks.push({
+      tag: name,
+      attributes: entry.attributes,
+      excluded,
+      order: entry.open,
+      snippet: `<${name}${entry.attributes}> ${inner.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').slice(0, 60)}`,
+    });
+  }
+  return blocks.sort((a, b) => a.order - b.order);
+}

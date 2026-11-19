@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { attr, hasAttr, ids, read, renderedIndex, root, tags } from './helpers.js';
+import { attr, hasAttr, ids, read, renderedIndex, root, tags, textBlocks } from './helpers.js';
 
 const html = renderedIndex();
 const body = html.slice(html.indexOf('<body'));
@@ -31,6 +31,18 @@ test('estrutura: um h1, hierarquia sem saltos, landmarks e navegações nomeadas
   const navs = tags(body, 'nav').map((a) => attr(a, 'aria-label'));
   assert.ok(navs.length >= 2 && navs.every(Boolean), 'toda <nav> precisa de aria-label');
   assert.equal(new Set(navs).size, navs.length, 'rótulos de <nav> distintos');
+});
+
+test('leitura por Tab: todo bloco de texto (p, h1-h6, dl, blockquote) é uma parada de Tab', () => {
+  const blocks = textBlocks(body);
+  const included = blocks.filter((block) => !block.excluded);
+  assert.ok(included.length > 40, `só ${included.length} blocos de texto encontrados`);
+  const missing = included.filter((block) => attr(block.attributes, 'tabindex') !== '0');
+  assert.deepEqual(missing.map((block) => block.snippet), [], 'blocos de texto sem tabindex="0"');
+  // Onde o texto não é lido nem visto, ou o controle já é a parada, não pode haver parada extra.
+  // Texto com `hidden` pode trazer tabindex: só vira parada quando o JavaScript o revela.
+  const extra = blocks.filter((block) => block.excluded && block.excluded !== 'hidden' && hasAttr(block.attributes, 'tabindex'));
+  assert.deepEqual(extra.map((block) => `${block.excluded}: ${block.snippet}`), [], 'paradas de Tab sem necessidade');
 });
 
 test('link de salto: primeiro elemento focável e com destino existente', () => {
@@ -187,6 +199,9 @@ test('CSS: foco nunca suprimido, movimento reduzido tratado, tamanhos mínimos r
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
   const suppressed = [...withoutComments.matchAll(/([^{}]+)\{[^{}]*outline\s*:\s*(none|0)\b[^{}]*\}/g)].map((m) => m[1].trim());
   assert.deepEqual(suppressed, ['main:focus'], 'só o destino do link de salto pode ficar sem contorno');
+  // Blocos de texto com tabindex="0" usam o mesmo anel de foco dos controles.
+  assert.match(withoutComments, /:where\([^)]*\[tabindex\][^)]*\):focus-visible\s*\{[^}]*outline:\s*3px solid var\(--focus/);
+  assert.doesNotMatch(withoutComments, /position:\s*(sticky|fixed)/, 'elemento fixo poderia encobrir o foco (SC 2.4.11)');
   assert.match(css, /prefers-reduced-motion:\s*no-preference/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /forced-colors:\s*active/);

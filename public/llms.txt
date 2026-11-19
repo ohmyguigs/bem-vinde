@@ -1,0 +1,21 @@
+# Oh My Guigs (Guilherme Freitas)
+
+> Site pessoal de Guilherme Resende Freitas ("Guigs"): Staff Software Engineer especialista em frontend, músico e defensor de causas socioambientais. Página única, em português do Brasil, estática e acessível.
+
+## Seções do site
+
+- [Laboratório](https://ohmyguigs.com/#laboratorio): projetos públicos no GitHub, incluindo o código deste site.
+- [Atlas da fauna brasileira](https://ohmyguigs.com/#atlas): gráficos acessíveis com dados oficiais do SALVE/ICMBio sobre o risco de extinção das espécies.
+- [Música](https://ohmyguigs.com/#musica): o single "Trocas Genuínas", lançado em 2021 sob o nome ohmyguigs.
+- [Carreira](https://ohmyguigs.com/#carreira): trajetória em frontend desde 2011, de freelancer a Staff Engineer.
+
+## Perfis
+
+- [LinkedIn](https://www.linkedin.com/in/guilherme-freitas/): trajetória profissional.
+- [GitHub](https://github.com/ohmyguigs): código aberto e projetos.
+- [Spotify](https://open.spotify.com/artist/47xEK4LOxuIqGwps1w8nFm): música.
+
+## Opcional
+
+- [Código-fonte do site](https://github.com/ohmyguigs/bem-vinde)
+- [Sitemap](https://ohmyguigs.com/sitemap.xml)

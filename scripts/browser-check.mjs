@@ -134,7 +134,9 @@ try {
   await visit();
   check('componentes registrados', await evaluate(`['accessible-pie','chart-explorer','chart-settings'].every((n) => !!customElements.get(n))`));
 
-  await evaluate(`document.querySelector('[data-setting="motion"]').focus()`);
+  // Entre os switches e a primeira fatia há textos que também são paradas de Tab (título, KPIs, lide do gráfico).
+  await evaluate(`document.querySelector('#grafico-categorias .chart-lede').focus()`);
+  check('o texto do gráfico é uma parada de Tab', await evaluate(`document.activeElement.matches('.chart-lede[tabindex="0"]')`));
   await key('Tab', 9);
   let now = await active();
   check('Tab entra no primeiro gráfico, na primeira fatia', now.cls === 'slice' && now.tabindex === '0', now.label);
@@ -216,7 +218,10 @@ try {
   await sleep(300);
   check('índice do atlas leva ao gráfico de biomas', await evaluate(`location.hash === '#grafico-biomas'`));
   await key('Tab', 9);
-  check('depois do link do índice, o Tab entra no conteúdo do gráfico (select de bioma)', await evaluate(`document.activeElement.id === 'filtro-bioma'`), await evaluate(`document.activeElement.id || document.activeElement.tagName`));
+  check('depois do link do índice, o Tab para no título do gráfico', await evaluate(`document.activeElement.id === 'titulo-g4'`), await evaluate(`document.activeElement.id || document.activeElement.tagName`));
+  await key('Tab', 9);
+  await key('Tab', 9);
+  check('e dois Tabs depois (título, texto) chegam ao select de bioma', await evaluate(`document.activeElement.id === 'filtro-bioma'`), await evaluate(`document.activeElement.id || document.activeElement.tagName`));
   await evaluate(`document.querySelector('#voltar-topo-atlas').click()`);
   // A rolagem é suave (scroll-behavior: smooth): espera terminar, até 5 s.
   for (let i = 0; i < 30 && (await evaluate(`window.scrollY`)) !== 0; i++) await sleep(200);

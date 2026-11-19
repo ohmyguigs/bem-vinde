@@ -13,7 +13,7 @@ const css = assets.filter((name) => name.endsWith('.css'));
 const gz = (file) => gzipSync(readFileSync(join(dist, 'assets', file))).length;
 
 test('dist contém HTML, CSS e JS locais, CNAME, robots e sitemap', () => {
-  for (const file of ['index.html', 'CNAME', 'robots.txt', 'sitemap.xml', 'favicon.svg', 'favicon.ico']) {
+  for (const file of ['index.html', 'CNAME', 'robots.txt', 'sitemap.xml', 'favicon.svg', 'favicon.ico', 'llms.txt', 'ai-catalog.json', '.well-known/ard.json', '.well-known/ai-catalog.json']) {
     assert.ok(existsSync(join(dist, file)), `falta dist/${file}`);
   }
   assert.equal(readFileSync(join(dist, 'CNAME'), 'utf8').trim(), 'ohmyguigs.com');
