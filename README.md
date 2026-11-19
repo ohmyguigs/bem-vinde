@@ -1,49 +1,85 @@
-# This was made using [Astro](https://astro.build)
+# ohmyguigs.com
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/s/github/withastro/astro/tree/latest/examples/basics)
+Site pessoal de Guilherme “Guigs” Freitas, em português do Brasil. É um experimento de stack restrita: **HTML5, Tailwind CSS e JavaScript puro com Web Components**, sem framework, sem bibliotecas de interface e sem requisições a terceiros, com acessibilidade (WCAG 2.2 AA) e Core Web Vitals como requisito.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+O site tem uma abertura editorial, a trajetória profissional, projetos do GitHub, a música (single *Trocas Genuínas*) e um **atlas da fauna brasileira** com gráficos de pizza acessíveis, feitos com dados do [SALVE/ICMBio](https://salve.icmbio.gov.br/).
 
-![basics](https://user-images.githubusercontent.com/4677417/186188965-73453154-fdec-4d6b-9c34-cb35c248ae5b.png)
+## Rodar localmente
 
-## 🚀 Project Structure
+Requer Node.js 22.12 ou mais novo (`.nvmrc`).
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm install
+npm run dev        # servidor local com recarga, em http://localhost:5173
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Outros comandos:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Comando | O que faz |
+| :--- | :--- |
+| `npm run build` | Gera o site em `dist/` |
+| `npm run preview` | Serve o `dist/` em `http://localhost:4173` |
+| `npm test` | Testes de dados, gráficos, acessibilidade estática, contraste e workflow |
+| `npm run check` | Testes, build e testes do artefato (o mesmo que o CI roda) |
+| `npm run browser-check` | Verifica no Chrome (teclado, foco, filtros, movimento reduzido, reflow, sem JavaScript). Precisa do Chrome instalado |
+| `npm run lighthouse` | Audita o build (mobile e desktop); exige 100 nos quatro tópicos. Precisa do Chrome e baixa o Lighthouse via `npx` |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Como funciona
 
-## 🧞 Commands
+- **Tudo está no HTML inicial.** `index.html` tem marcadores `<!--@pie:categorias-->`, `<!--@kpis-->` etc. O Vite os troca no build (`src/lib/prerender.js`) por gráficos, legendas e tabelas completos. Sem JavaScript, a página inteira continua legível e todos os números continuam acessíveis; o JavaScript só acrescenta teclado, foco e filtros.
+- **Web Components** (`src/components/`, light DOM): `<accessible-pie>` (cada fatia é uma parada de Tab, setas como atalho, destaque na fatia e na linha da legenda no foco e no mouse), `<chart-explorer>` (filtro nativo `<select>` que troca o recorte no lugar e anuncia o resultado) e `<chart-settings>` (preferências de padrões e animações, salvas só neste navegador).
+- **Gráficos acessíveis:** cada gráfico tem cor, padrão de preenchimento, contorno, legenda, resumo em texto e tabela equivalente. Inspirado nos gráficos de pizza do [Panorama de acessibilidade digital Brasil e Portugal 2026](https://tudoeacessibilidade.com.br/pesquisa/panorama-brasil-portugal-2026/).
+- **Movimento é opcional:** respeita `prefers-reduced-motion`, tem um interruptor próprio e nenhuma animação é infinita.
 
-All commands are run from the root of the project, from a terminal:
+## Dados
 
-| Command                | Action                                             |
-| :--------------------- | :------------------------------------------------- |
-| `npm install`          | Installs dependencies                              |
-| `npm run dev`          | Starts local dev server at `localhost:3000`        |
-| `npm run build`        | Build your production site to `./dist/`            |
-| `npm run preview`      | Preview your build locally, before deploying       |
-| `npm run astro ...`    | Run CLI commands like `astro add`, `astro preview` |
-| `npm run astro --help` | Get help using the Astro CLI                       |
+| Arquivo | Conteúdo | Origem |
+| :--- | :--- | :--- |
+| `src/data/salve.js` | Números do SALVE | Respostas públicas do portal, coletadas em 19/11/2026 |
+| `src/data/projects.js` | Três projetos do GitHub | Perfil público github.com/ohmyguigs |
+| `src/data/profile.js` | Links e identificação | Perfil público do LinkedIn |
 
-## 👀 Want to learn more?
+O texto da carreira vem do perfil público do LinkedIn. O PDF exportado fica fora do repositório e telefone e e-mail não são publicados.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### Atualizar o snapshot do SALVE
+
+1. Consulte as respostas listadas em `SOURCE.endpoints` (em `src/data/salve.js`), por exemplo abrindo o portal e usando a aba Network do navegador.
+2. Copie os valores sem ajustes, atualize `SOURCE.collectedAt` e `collectedAtLabel` (e `sitemap.xml`, se quiser refletir a data).
+3. Rode `npm test`: os testes recalculam cada percentual a partir dos totais e acusam erro de transcrição.
+
+O portal publica bases diferentes em painéis diferentes (por exemplo 15.974 espécies avaliadas no painel geral, 15.410 na soma das categorias e 15.781 na soma dos grupos). O site reproduz os números como estão e explica isso na própria página.
+
+## Deploy
+
+O workflow `.github/workflows/deploy.yml` roda a cada push na `main` (e manualmente pela aba Actions): `npm ci`, `npm run check`, envio de `dist/` como artefato e publicação com `actions/deploy-pages`. O domínio `ohmyguigs.com` vem de `public/CNAME`.
+
+Configuração única no GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+## Acessibilidade
+
+- Perfil **Standard (WCAG 2.2 AA)** do protocolo [A11Y.md](https://github.com/fecarrico/A11Y.md) (skill em `.kiro/skills/a11y/` e instrução permanente em `.kiro/steering/accessibility.md`).
+- `A11Y-DECISIONS.md` registra as decisões de padrão; `EXCEPTIONS.md` registra desvios (hoje, nenhum); `REPORT.md` reúne as evidências e o que ainda precisa de teste humano.
+- Teste automatizado não prova conformidade: o `REPORT.md` separa o que foi verificado do que depende de leitor de tela e de pessoas.
+
+Para rodar o gate estático do A11Y.md:
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/fecarrico/A11Y.md/main/tools/verify-a11y.py
+python3 verify-a11y.py .
+```
+
+## Estrutura
+
+```text
+.github/workflows/deploy.yml   deploy no GitHub Pages
+.kiro/steering/                regras permanentes para o Kiro (stack, acessibilidade)
+.kiro/skills/a11y/             skill A11Y.md (cópia fixada da v2.5.0)
+public/                        CNAME, favicon, robots.txt, sitemap.xml
+scripts/                       browser-check.mjs (Chrome) e lighthouse.mjs (auditoria do build)
+src/components/                Web Components
+src/data/                      dados estáticos
+src/lib/                       funções puras (geometria, formatação, renderização)
+src/main.js, src/styles.css    entrada JavaScript e CSS (Tailwind)
+tests/                         node --test (tests/build/ roda sobre o dist/)
+index.html                     conteúdo da página
+```

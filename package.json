@@ -1,21 +1,25 @@
 {
-  "name": "@example/basics",
-  "type": "module",
-  "version": "0.0.1",
+  "name": "ohmyguigs-site",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "format": "prettier --write .",
-    "preview": "astro preview",
-    "astro": "astro"
+  "type": "module",
+  "description": "Site pessoal estático: HTML5, Tailwind CSS e JavaScript nativo com Web Components.",
+  "engines": {
+    "node": ">=22.12"
   },
-  "dependencies": {
-    "astro": "^1.8.0"
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test \"tests/*.test.js\"",
+    "test:build": "node --test \"tests/build/*.test.js\"",
+    "check": "npm test && npm run build && npm run test:build",
+    "browser-check": "node scripts/browser-check.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs"
   },
   "devDependencies": {
-    "prettier": "^2.8.1",
-    "prettier-plugin-astro": "^0.7.0"
+    "@tailwindcss/vite": "^4.3.5",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.8"
   }
 }

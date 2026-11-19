@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Oh My Guigs (Guilherme Freitas) · Frontend, música e impacto socio-ambiental</title>
+    <meta
+      name="description"
+      content="“Guigs” ou Guilherme Freitas: Staff Software Engineer especialista em frontend, músico e militante de causas socioambientais."
+    />
+    <meta name="theme-color" content="#0e0f12" />
+    <link rel="canonical" href="https://ohmyguigs.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="ohmyguigs" />
+    <meta property="og:title" content="Guigs (Guilherme Freitas) · Frontend, música e fauna brasileira" />
+    <meta
+      property="og:description"
+      content="Staff Software Engineer especialista em frontend, músico e defensor de causas socioambientais."
+    />
+    <meta property="og:url" content="https://ohmyguigs.com/" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+
+    <!-- Preferências salvas (padrões e animações) aplicadas antes da primeira pintura. -->
+    <script>
+      try {
+        var root = document.documentElement;
+        if (localStorage.getItem('ohmyguigs:patterns') === '0') root.classList.add('no-patterns');
+        if (localStorage.getItem('ohmyguigs:motion') === '0') root.classList.add('no-motion');
+      } catch (error) {}
+    </script>
+    <noscript><style>.js-only { display: none !important; }</style></noscript>
+
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="module" src="/src/main.js"></script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Guilherme Resende Freitas",
+        "alternateName": "Guigs",
+        "url": "https://ohmyguigs.com/",
+        "jobTitle": "Staff Software Engineer",
+        "worksFor": { "@type": "Organization", "name": "OLX Brasil" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Rio de Janeiro", "addressCountry": "BR" },
+        "knowsLanguage": ["pt-BR", "en", "es"],
+        "sameAs": [
+          "https://www.linkedin.com/in/guilherme-freitas/",
+          "https://github.com/ohmyguigs",
+          "https://open.spotify.com/artist/47xEK4LOxuIqGwps1w8nFm"
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <header id="inicio" class="site-header theme-ink">
+      <div class="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3">
+        <a class="brand" href="#topo">ohmyguigs</a>
+        <nav aria-label="Principal">
+          <ul class="nav-list" role="list">
+            <li><a class="nav-link" href="#laboratorio">Laboratório</a></li>
+            <li><a class="nav-link" href="#atlas">Atlas</a></li>
+            <li><a class="nav-link" href="#musica">Música</a></li>
+            <li><a class="nav-link" href="#carreira">Carreira</a></li>
+            <li>
+              <a class="nav-link nav-link-external" href="https://www.linkedin.com/in/guilherme-freitas/" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (abre em nova aba)</span></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo" tabindex="-1">
+      <!-- 1. ABERTURA -->
+      <section id="topo" class="hero theme-ink" aria-labelledby="titulo-hero">
+        <div class="wrap hero-inner">
+          <div class="hero-orb" aria-hidden="true"></div>
+          <p class="kicker">Oh My · Guigs · Guilherme Freitas · Teresópolis · RJ, Brasil</p>
+          <h1 id="titulo-hero">
+            Resolvo <em class="mark">problemas</em> na web, digo que faço <em class="mark">música</em> e apoio causas <em class="mark">socioambientais</em>.
+          </h1>
+          <p class="hero-lede">
+            Sou Staff Software Engineer na OLX Brasil, especialista em frontend. Meu trabalho é arquitetar e implementar boas práticas de engenharia, com foco em SEO e em tráfego orgânico.
+          </p>
+          <p class="hero-lede">
+            Este site é um laboratório: HTML, Tailwind CSS e JavaScript "Vanilla" (sem framework), com foco em acessibilidade e Core Web Vitals como requisito, não como enfeite. Tente navegar com o teclado usando Tab ou Shift+Tab.
+          </p>
+          <dl class="hero-facts">
+            <div><dt>Agora</dt><dd>Staff Software Engineer, OLX Brasil</dd></div>
+            <div><dt>Ferramentas</dt><dd>HTML5, CSS com Tailwind e JavaScript</dd></div>
+            <div><dt>Fora do código</dt><dd>Música, jogos e causas socioambientais</dd></div>
+          </dl>
+          <p class="margin-note">
+            <span class="margin-note-tag">Nota de margem</span>
+            Sem bibliotecas de interface, sem cookies e sem rastreamento. Graças a Deus.
+          </p>
+        </div>
+      </section>
+
+      <!-- 2. LABORATÓRIO -->
+      <section id="laboratorio" class="section theme-night" aria-labelledby="titulo-lab">
+        <div class="wrap">
+          <p class="kicker">GitHub</p>
+          <h2 id="titulo-lab" class="section-title">Laboratório aberto</h2>
+          <p class="section-lede">
+            <q lang="en">General problem solver &amp; Bringer of happiness @ Earth</q>, a bio do meu perfil. Aqui vão três projetos públicos para espiar o código.
+          </p>
+
+          <div class="terminal reveal mt-10">
+            <div class="terminal-bar" aria-hidden="true">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="terminal-title">~/laboratorio</span>
+            </div>
+            <p class="terminal-prompt" aria-hidden="true">$ gh repo list ohmyguigs --limit 3</p>
+            <ul class="projects" role="list">
+              <!--@projects-->
+            </ul>
+          </div>
+
+          <p class="mt-8">
+            Também há experimentos de jogos em Godot e Unity no perfil.
+            <a class="link" href="https://github.com/ohmyguigs" target="_blank" rel="noopener noreferrer">Ver todos os repositórios no GitHub<span class="sr-only"> (abre em nova aba)</span></a>
+          </p>
+          <p class="back-to-top"><a id="voltar-topo-laboratorio" href="#inicio">Voltar ao topo</a></p>
+        </div>
+      </section>
+
+      <!-- 3. ATLAS -->
+      <section id="atlas" class="section theme-moss" aria-labelledby="titulo-atlas">
+        <div class="wrap">
+          <p class="kicker">Causas socioambientais</p>
+          <h2 id="titulo-atlas" class="section-title">Atlas da fauna brasileira</h2>
+          <p class="section-lede">
+            Gosto de tecnologia que serve às pessoas e ao território onde elas vivem. Aqui, números oficiais do SALVE, o sistema do ICMBio que avalia o risco de extinção das espécies da fauna do Brasil, viram gráficos que qualquer pessoa consegue ler: com teclado, com leitor de tela e sem depender de cor.
+          </p>
+
+          <nav class="toc" aria-label="Gráficos do atlas">
+            <p class="toc-title">Ir direto para</p>
+            <ul class="toc-list" role="list">
+              <li><a id="indice-panorama" href="#panorama">O panorama no SALVE</a></li>
+              <li><a id="indice-categorias" href="#grafico-categorias">Espécies por categoria de risco</a></li>
+              <li><a id="indice-grupos" href="#grafico-grupos">Grupos da fauna mais avaliados</a></li>
+              <li><a id="indice-ameaca" href="#grafico-ameaca-por-grupo">Risco dentro de cada grupo</a></li>
+              <li><a id="indice-biomas" href="#grafico-biomas">Risco em cada bioma</a></li>
+              <li><a id="indice-preferencias" href="#preferencias">Preferências de leitura</a></li>
+              <li><a id="indice-fonte" href="#fonte-dos-dados">Fonte dos dados</a></li>
+            </ul>
+          </nav>
+
+          <chart-settings id="preferencias" class="settings reveal" role="group" aria-labelledby="titulo-preferencias">
+            <h3 id="titulo-preferencias" class="settings-title">Preferências de leitura</h3>
+            <div class="settings-grid">
+              <div class="setting">
+                <button type="button" role="switch" aria-checked="true" class="switch" id="preferencia-padroes" data-setting="patterns" aria-describedby="ajuda-padroes">
+                  <span class="switch-label">Padrões de preenchimento nos gráficos</span>
+                  <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+                  <span class="switch-state" aria-hidden="true" data-state>Ligado</span>
+                </button>
+                <p id="ajuda-padroes" class="switch-help">Os padrões ajudam a distinguir as fatias sem depender de cor.</p>
+              </div>
+              <div class="setting">
+                <button type="button" role="switch" aria-checked="true" class="switch" id="preferencia-animacoes" data-setting="motion" aria-describedby="ajuda-animacoes">
+                  <span class="switch-label">Animações do site</span>
+                  <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+                  <span class="switch-state" aria-hidden="true" data-state>Ligado</span>
+                </button>
+                <p id="ajuda-animacoes" class="switch-help">Controla o movimento das fatias e os efeitos de rolagem.</p>
+                <p class="switch-help" data-os-note hidden>Desligadas porque o seu sistema pede movimento reduzido.</p>
+              </div>
+            </div>
+          </chart-settings>
+
+          <h3 id="panorama" class="block-title mt-12">O panorama no SALVE</h3>
+          <!--@kpis-->
+
+          <!-- Gráfico 1 -->
+          <section id="grafico-categorias" class="chart-card reveal" aria-labelledby="titulo-g1">
+            <h3 id="titulo-g1" class="block-title">Quantas espécies estão em cada categoria de risco?</h3>
+            <p class="chart-lede">
+              A maior parte das espécies avaliadas está em Menos Preocupante (LC). As categorias de ameaça são Criticamente em Perigo (CR), Em Perigo (EN) e Vulnerável (VU).
+            </p>
+            <!--@pie:categorias-->
+          </section>
+
+          <!-- Gráfico 2 -->
+          <section id="grafico-grupos" class="chart-card reveal" aria-labelledby="titulo-g2">
+            <h3 id="titulo-g2" class="block-title">Quais grupos da fauna foram mais avaliados?</h3>
+            <p class="chart-lede">Peixes continentais e invertebrados terrestres lideram em número de espécies avaliadas.</p>
+            <!--@pie:grupos-->
+          </section>
+
+          <!-- Gráfico 3 -->
+          <section id="grafico-ameaca-por-grupo" class="chart-card reveal" aria-labelledby="titulo-g3">
+            <h3 id="titulo-g3" class="block-title">Como o risco se divide dentro de cada grupo?</h3>
+            <p class="chart-lede">Escolha um grupo para ver como as espécies ameaçadas dele se distribuem entre as categorias.</p>
+            <chart-explorer class="explorer" data-chart="ameaca-por-grupo">
+              <div class="explorer-controls js-only">
+                <label class="field-label" for="filtro-grupo">Grupo da fauna</label>
+                <select id="filtro-grupo" class="select" disabled>
+                  <!--@options:ameaca-por-grupo-->
+                </select>
+              </div>
+              <p class="sr-only" role="status" data-status></p>
+              <div data-pie-host>
+                <!--@pie:ameaca-por-grupo-->
+              </div>
+              <details class="all-tables">
+                <summary id="tabelas-todos-os-grupos">Ver as tabelas de todos os grupos</summary>
+                <div class="tables-stack">
+                  <!--@tables:ameaca-por-grupo-->
+                </div>
+              </details>
+            </chart-explorer>
+          </section>
+
+          <!-- Gráfico 4 -->
+          <section id="grafico-biomas" class="chart-card reveal" aria-labelledby="titulo-g4">
+            <h3 id="titulo-g4" class="block-title">E em cada bioma?</h3>
+            <p class="chart-lede">
+              Como as categorias de risco se distribuem em cada bioma. O portal inclui o Sistema Costeiro-Marinho na lista, e cada recorte tem a sua própria base de cálculo.
+            </p>
+            <chart-explorer class="explorer" data-chart="biomas">
+              <div class="explorer-controls js-only">
+                <label class="field-label" for="filtro-bioma">Bioma ou sistema</label>
+                <select id="filtro-bioma" class="select" disabled>
+                  <!--@options:biomas-->
+                </select>
+              </div>
+              <p class="sr-only" role="status" data-status></p>
+              <div data-pie-host>
+                <!--@pie:biomas-->
+              </div>
+              <details class="all-tables">
+                <summary id="tabelas-todos-os-biomas">Ver as tabelas de todos os biomas</summary>
+                <div class="tables-stack">
+                  <!--@tables:biomas-->
+                </div>
+              </details>
+            </chart-explorer>
+          </section>
+
+          <aside id="fonte-dos-dados" class="source" aria-labelledby="titulo-fonte">
+            <h3 id="titulo-fonte" class="block-title">Fonte dos dados</h3>
+            <p>
+              Todos os números vêm do
+              <a class="link" href="https://salve.icmbio.gov.br/" target="_blank" rel="noopener noreferrer">SALVE, Sistema de Avaliação do Risco de Extinção da Biodiversidade, do ICMBio<span class="sr-only"> (abre em nova aba)</span></a>.
+              Foram coletados em <time datetime="2026-11-19">19 de novembro de 2026</time> e gravados neste site, sem consultas em tempo real. Podem ter mudado desde então.
+            </p>
+            <p><!--@bases--></p>
+            <p>
+              <strong>Como citar:</strong> ICMBio, 2026. Sistema de Avaliação do Risco de Extinção da Biodiversidade – SALVE. Disponível em:
+              <a class="link" href="https://salve.icmbio.gov.br/" target="_blank" rel="noopener noreferrer">https://salve.icmbio.gov.br/<span class="sr-only"> (abre em nova aba)</span></a>. Acesso em: 19 de nov. de 2026.
+            </p>
+            <details class="all-tables">
+              <summary id="origem-dos-graficos">Origem de cada gráfico</summary>
+              <p>Respostas públicas consultadas no portal:</p>
+              <ul class="plain-list" role="list">
+                <!--@endpoints-->
+              </ul>
+            </details>
+            <h4 class="mini-title">Siglas das categorias</h4>
+            <!--@glossary-->
+          </aside>
+
+          <p class="back-to-top"><a id="voltar-topo-atlas" href="#inicio">Voltar ao topo</a></p>
+        </div>
+      </section>
+
+      <!-- 4. MÚSICA -->
+      <section id="musica" class="section theme-grape" aria-labelledby="titulo-musica">
+        <div class="wrap music-grid">
+          <div class="vinyl-stage" aria-hidden="true"><div class="vinyl"></div></div>
+          <div>
+            <p class="kicker">Música</p>
+            <h2 id="titulo-musica" class="section-title">Trocas Genuínas</h2>
+            <p class="section-lede">
+              Uma carreira musical curta, mas minha. Em 2021, sob o nome ohmyguigs, lancei o single “Trocas Genuínas”, distribuído nas plataformas de streaming.
+            </p>
+            <p class="mt-8">
+              <a class="button button-bubble spotify-link" href="https://open.spotify.com/artist/47xEK4LOxuIqGwps1w8nFm" target="_blank" rel="noopener noreferrer">Ouvir ohmyguigs no Spotify<span class="sr-only"> (abre em nova aba)</span></a>
+            </p>
+            <p class="back-to-top"><a id="voltar-topo-musica" href="#inicio">Voltar ao topo</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. CARREIRA -->
+      <section id="carreira" class="section theme-paper" aria-labelledby="titulo-carreira">
+        <div class="wrap">
+          <p class="kicker">Carreira</p>
+          <h2 id="titulo-carreira" class="section-title">Frontend como sistema</h2>
+          <p class="section-lede">Desde 2011 construindo para a web, de freelancer a Staff Engineer.</p>
+
+          <div class="mt-10 grid gap-6 lg:grid-cols-12">
+            <article class="ficha reveal lg:col-span-7" aria-labelledby="ficha-olx">
+              <p class="ficha-meta">Ficha 01 · dez. 2019 até hoje · Rio de Janeiro e região</p>
+              <h3 id="ficha-olx" class="ficha-title">OLX Brasil</h3>
+              <p class="ficha-role">Staff Software Engineer (especialista frontend)</p>
+              <p>
+                Responsável por arquitetar, desenvolver e implementar as melhores práticas de engenharia frontend, com a missão de aproveitar bem o SEO e seus recursos para aumentar o tráfego orgânico dos clientes.
+              </p>
+              <p>
+                Alinha decisões com o Google e com a comunidade web para identificar estratégias, define com pessoas de produto um backlog mensurável e orienta quem desenvolve frontend nesse processo.
+              </p>
+            </article>
+
+            <article class="ficha reveal lg:col-span-5" aria-labelledby="ficha-vtex">
+              <p class="ficha-meta">Ficha 02 · jul. 2015 a dez. 2019 · 4 anos e 6 meses</p>
+              <h3 id="ficha-vtex" class="ficha-title">VTEX</h3>
+              <p class="ficha-role">Software Developer (Tech Lead)</p>
+              <p>Entrou como estagiário no programa de verão, como Software Engineer.</p>
+              <p>
+                Na segunda promoção, foi tech lead do inStore, a interface da plataforma de e-commerce para as lojas físicas dos clientes. Trabalhou em integrações de pagamento com GooglePay, ApplePay, AppleStore, PlayStore e adquirentes, levando o cartão de crédito presencial aos sistemas embarcados das maquininhas, com react.js, react-native, electron e outros recursos de JavaScript.
+              </p>
+            </article>
+
+            <article class="ficha reveal lg:col-span-5" aria-labelledby="ficha-autonomo">
+              <p class="ficha-meta">Ficha 03 · 2011 a jul. 2015 · 4 anos</p>
+              <h3 id="ficha-autonomo" class="ficha-title">Autônomo</h3>
+              <p class="ficha-role">Freelance Software Developer</p>
+              <p>Projetos de desenvolvimento de software para clientes, antes da entrada na VTEX.</p>
+            </article>
+
+            <figure class="quote reveal lg:col-span-7">
+              <blockquote>
+                <p>
+                  Do Brasil. Minhas paixões são resolver problemas, tecnologia e música. Experiências com pessoas e outras culturas são sempre bem-vindas. Quero tornar a vida das pessoas melhor, contribuindo para o futuro da humanidade, que é a revolução proletária internacional.
+                </p>
+              </blockquote>
+              <figcaption>Resumo do meu perfil no LinkedIn, em português</figcaption>
+            </figure>
+          </div>
+
+          <div class="panels mt-10">
+            <section class="panel" aria-labelledby="painel-competencias">
+              <h3 id="painel-competencias" class="panel-title">Principais competências</h3>
+              <ul class="chips" role="list">
+                <li>Tailwind CSS</li>
+                <li>HTML5</li>
+                <li>JavaScript</li>
+              </ul>
+            </section>
+            <section class="panel" aria-labelledby="painel-idiomas">
+              <h3 id="painel-idiomas" class="panel-title">Idiomas</h3>
+              <ul class="plain-list" role="list">
+                <li><strong>Inglês:</strong> nativo ou bilíngue</li>
+                <li><strong>Português:</strong> nativo ou bilíngue</li>
+                <li><strong>Espanhol:</strong> profissional limitado</li>
+              </ul>
+            </section>
+            <section class="panel" aria-labelledby="painel-certificacoes">
+              <h3 id="painel-certificacoes" class="panel-title">Certificações</h3>
+              <ul class="plain-list" role="list">
+                <li>Destaque Acadêmico</li>
+                <li>Maratona de Negócios</li>
+                <li>Iniciativa Jovem Shell</li>
+              </ul>
+            </section>
+            <section class="panel" aria-labelledby="painel-formacao">
+              <h3 id="painel-formacao" class="panel-title">Formação acadêmica</h3>
+              <ul class="plain-list" role="list">
+                <li><strong>Universidade Veiga de Almeida:</strong> Sistemas de Informação, 2015 a 2019, em pausa (não concluído)</li>
+                <li><strong>PUC-Rio:</strong> Engenharia Mecânica, 2011 a 2015, em pausa (não concluído)</li>
+              </ul>
+            </section>
+          </div>
+
+          <p class="mt-10">
+            <a class="button button-dark" href="https://www.linkedin.com/in/guilherme-freitas/" target="_blank" rel="noopener noreferrer">Ver o perfil completo no LinkedIn<span class="sr-only"> (abre em nova aba)</span></a>
+          </p>
+          <p class="back-to-top"><a id="voltar-topo-carreira" href="#inicio">Voltar ao topo</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer theme-ink">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand">ohmyguigs</p>
+          <p class="footer-text">Feito por Guigs com HTML5, Tailwind CSS e JavaScript. Sem cookies e sem rastreamento. E com Axé!</p>
+        </div>
+        <nav aria-label="Links externos">
+          <ul class="nav-list nav-list-stack" role="list">
+            <li><a class="nav-link nav-link-external" href="https://www.linkedin.com/in/guilherme-freitas/" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (abre em nova aba)</span></a></li>
+            <li><a class="nav-link nav-link-external" href="https://github.com/ohmyguigs" target="_blank" rel="noopener noreferrer">GitHub<span class="sr-only"> (abre em nova aba)</span></a></li>
+            <li><a class="nav-link nav-link-external" href="https://open.spotify.com/artist/47xEK4LOxuIqGwps1w8nFm" target="_blank" rel="noopener noreferrer">Spotify<span class="sr-only"> (abre em nova aba)</span></a></li>
+            <li><a class="nav-link nav-link-external" href="https://github.com/ohmyguigs/bem-vinde" target="_blank" rel="noopener noreferrer">Código-fonte deste site<span class="sr-only"> (abre em nova aba)</span></a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
