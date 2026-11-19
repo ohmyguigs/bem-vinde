@@ -38,7 +38,7 @@ function kpis() {
         `<div class="kpi"><dt class="kpi-label">${label}</dt><dd class="kpi-value">${formatInt(value)}${note ? `<span class="kpi-note">${escapeHtml(note)} (aviso do portal)</span>` : ''}</dd></div>`,
     )
     .join('');
-  return `<dl class="kpis">${cards}</dl>`;
+  return `<dl class="kpis" tabindex="0">${cards}</dl>`;
 }
 
 function options(list, selected) {
@@ -58,7 +58,7 @@ function glossary() {
   const rows = Object.values(CATEGORIES)
     .map((category) => `<div class="gloss-item"><dt>${category.code}</dt><dd>${escapeHtml(category.name)}</dd></div>`)
     .join('');
-  return `<dl class="glossary">${rows}</dl>`;
+  return `<dl class="glossary" tabindex="0">${rows}</dl>`;
 }
 
 function endpoints() {
@@ -70,7 +70,7 @@ function endpoints() {
 function projects() {
   return PROJECTS.map(
     (project) =>
-      `<li class="project"><article><h3 class="project-name">${externalLink(project.url, escapeHtml(project.name))}</h3><p class="project-desc">${escapeHtml(project.description)}</p><p class="project-meta"><span>${escapeHtml(project.language)}</span><span>${project.year}</span></p></article></li>`,
+      `<li class="project"><article><h3 class="project-name">${externalLink(project.url, escapeHtml(project.name))}</h3><p class="project-desc" tabindex="0">${escapeHtml(project.description)}</p><p class="project-meta" tabindex="0"><span>${escapeHtml(project.language)}</span><span>${project.year}</span></p></article></li>`,
   ).join('');
 }
 

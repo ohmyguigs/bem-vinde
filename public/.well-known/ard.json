@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "identifier": "urn:air:ohmyguigs.com:site:home",
+      "displayName": "Oh My Guigs",
+      "type": "text/html",
+      "url": "https://ohmyguigs.com/",
+      "description": "Site pessoal de Guilherme Freitas (Guigs): laboratório de projetos, atlas da fauna brasileira, música e carreira em frontend.",
+      "representativeQueries": [
+        "Quem é Guilherme Freitas, o Guigs?",
+        "Staff Software Engineer especialista em frontend no Brasil",
+        "Atlas acessível da fauna brasileira ameaçada de extinção"
+      ],
+      "tags": ["frontend", "acessibilidade", "música", "fauna brasileira"]
+    },
+    {
+      "identifier": "urn:air:ohmyguigs.com:site:llms-txt",
+      "displayName": "Resumo do site para modelos de linguagem (llms.txt)",
+      "type": "text/markdown",
+      "url": "https://ohmyguigs.com/llms.txt",
+      "description": "Resumo em Markdown do site e dos perfis públicos de Guilherme Freitas.",
+      "representativeQueries": [
+        "Resumo do site ohmyguigs.com",
+        "Perfis públicos de Guilherme Freitas"
+      ]
+    }
+  ]
+}
