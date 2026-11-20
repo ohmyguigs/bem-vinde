@@ -1,6 +1,7 @@
-import { announcement, renderPie } from '../lib/pie.js';
+import { announcement, renderChart } from '../lib/chart-render.js';
 import { getChartSpec } from '../lib/charts.js';
 import './accessible-pie.js';
+import './accessible-bars.js';
 
 /**
  * <chart-explorer data-chart="biomas">
@@ -21,7 +22,7 @@ export class ChartExplorer extends HTMLElement {
     select.disabled = false;
     select.addEventListener('change', () => {
       const spec = getChartSpec(chartId, select.value);
-      host.innerHTML = renderPie(spec);
+      host.innerHTML = renderChart(spec);
       if (status) status.textContent = announcement(spec);
     });
   }

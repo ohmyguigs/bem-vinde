@@ -1,16 +1,9 @@
-import {
-  BIOMES,
-  CATEGORIES,
-  EVALUATED_CATEGORIES,
-  EVALUATED_GROUPS,
-  SOURCE,
-  THREATENED_BY_GROUP,
-  TOTALS,
-} from '../data/salve.js';
+import { BIOMES, CATEGORIES, SOURCE, THREATENED_BY_GROUP, TOTALS } from '../data/salve.js';
 import { PROJECTS } from '../data/projects.js';
 import { BIOME_OPTIONS, DEFAULT_KEYS, GROUP_OPTIONS, getChartSpec } from './charts.js';
+import { renderChart } from './chart-render.js';
+import { renderTableOnly } from './chart-common.js';
 import { escapeHtml, formatInt } from './format.js';
-import { renderPie, renderTableOnly } from './pie.js';
 
 /**
  * Pré-renderização em tempo de build.
@@ -74,25 +67,17 @@ function projects() {
   ).join('');
 }
 
-/** Explica por que o total muda entre os painéis do portal (bases de cálculo reais, somadas dos dados). */
-function bases() {
-  const sum = (rows) => rows.reduce((total, row) => total + row.total, 0);
-  const categories = sum(EVALUATED_CATEGORIES);
-  const groups = sum(EVALUATED_GROUPS);
-  return `Atenção às bases: o painel geral informa ${formatInt(TOTALS.evaluated)} espécies avaliadas, o gráfico de categorias soma ${formatInt(categories)} e o gráfico de grupos soma ${formatInt(groups)}. Os percentuais publicados pelo SALVE usam a soma de cada gráfico como base, e o portal não explica, na página inicial, a diferença entre as somas. Por isso os números aparecem aqui exatamente como o portal os publica, sem ajustes.`;
-}
-
 const RENDERERS = {
-  'pie:categorias': () => renderPie(getChartSpec('categorias')),
-  'pie:grupos': () => renderPie(getChartSpec('grupos')),
-  'pie:ameaca-por-grupo': () => renderPie(getChartSpec('ameaca-por-grupo')),
-  'pie:biomas': () => renderPie(getChartSpec('biomas')),
+  'chart:ameacadas': () => renderChart(getChartSpec('ameacadas')),
+  'chart:categorias': () => renderChart(getChartSpec('categorias')),
+  'chart:grupos': () => renderChart(getChartSpec('grupos')),
+  'chart:ameaca-por-grupo': () => renderChart(getChartSpec('ameaca-por-grupo')),
+  'chart:biomas': () => renderChart(getChartSpec('biomas')),
   'options:ameaca-por-grupo': () => options(GROUP_OPTIONS, DEFAULT_KEYS['ameaca-por-grupo']),
   'options:biomas': () => options(BIOME_OPTIONS, DEFAULT_KEYS.biomas),
   'tables:ameaca-por-grupo': () => allTables('ameaca-por-grupo', Object.keys(THREATENED_BY_GROUP)),
   'tables:biomas': () => allTables('biomas', Object.keys(BIOMES)),
   kpis,
-  bases,
   glossary,
   endpoints,
   projects,

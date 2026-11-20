@@ -146,6 +146,7 @@
             <p class="toc-title" tabindex="0">Ir direto para</p>
             <ul class="toc-list" role="list">
               <li><a id="indice-panorama" href="#panorama">O panorama no SALVE</a></li>
+              <li><a id="indice-ameacadas" href="#grafico-ameacadas">Espécies ameaçadas por categoria</a></li>
               <li><a id="indice-categorias" href="#grafico-categorias">Espécies por categoria de risco</a></li>
               <li><a id="indice-grupos" href="#grafico-grupos">Grupos da fauna mais avaliados</a></li>
               <li><a id="indice-ameaca" href="#grafico-ameaca-por-grupo">Risco dentro de cada grupo</a></li>
@@ -164,7 +165,7 @@
                   <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
                   <span class="switch-state" aria-hidden="true" data-state>Ligado</span>
                 </button>
-                <p id="ajuda-padroes" class="switch-help" tabindex="0">Os padrões ajudam a distinguir as fatias sem depender de cor.</p>
+                <p id="ajuda-padroes" class="switch-help" tabindex="0">Os padrões ajudam a distinguir fatias, barras e colunas sem depender de cor.</p>
               </div>
               <div class="setting">
                 <button type="button" role="switch" aria-checked="true" class="switch" id="preferencia-animacoes" data-setting="motion" aria-describedby="ajuda-animacoes">
@@ -172,7 +173,7 @@
                   <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
                   <span class="switch-state" aria-hidden="true" data-state>Ligado</span>
                 </button>
-                <p id="ajuda-animacoes" class="switch-help" tabindex="0">Controla o movimento das fatias e os efeitos de rolagem.</p>
+                <p id="ajuda-animacoes" class="switch-help" tabindex="0">Controla o movimento dos gráficos e os efeitos de rolagem.</p>
                 <p class="switch-help" data-os-note hidden tabindex="0">Desligadas porque o seu sistema pede movimento reduzido.</p>
               </div>
             </div>
@@ -181,20 +182,29 @@
           <h3 id="panorama" class="block-title mt-12" tabindex="0">O panorama no SALVE</h3>
           <!--@kpis-->
 
+          <!-- Gráfico 0 -->
+          <section id="grafico-ameacadas" class="chart-card reveal" aria-labelledby="titulo-g0">
+            <h3 id="titulo-g0" class="block-title" tabindex="0">Como as espécies ameaçadas se dividem por categoria?</h3>
+            <p class="chart-lede" tabindex="0">
+              As espécies em categoria de ameaça são Criticamente em Perigo (CR), Em Perigo (EN) e Vulnerável (VU). O portal avisa que o total de 1.383 espécies não reflete a lista oficial.
+            </p>
+            <!--@chart:ameacadas-->
+          </section>
+
           <!-- Gráfico 1 -->
           <section id="grafico-categorias" class="chart-card reveal" aria-labelledby="titulo-g1">
             <h3 id="titulo-g1" class="block-title" tabindex="0">Quantas espécies estão em cada categoria de risco?</h3>
             <p class="chart-lede" tabindex="0">
               A maior parte das espécies avaliadas está em Menos Preocupante (LC). As categorias de ameaça são Criticamente em Perigo (CR), Em Perigo (EN) e Vulnerável (VU).
             </p>
-            <!--@pie:categorias-->
+            <!--@chart:categorias-->
           </section>
 
           <!-- Gráfico 2 -->
           <section id="grafico-grupos" class="chart-card reveal" aria-labelledby="titulo-g2">
             <h3 id="titulo-g2" class="block-title" tabindex="0">Quais grupos da fauna foram mais avaliados?</h3>
             <p class="chart-lede" tabindex="0">Peixes continentais e invertebrados terrestres lideram em número de espécies avaliadas.</p>
-            <!--@pie:grupos-->
+            <!--@chart:grupos-->
           </section>
 
           <!-- Gráfico 3 -->
@@ -210,7 +220,7 @@
               </div>
               <p class="sr-only" role="status" data-status></p>
               <div data-pie-host>
-                <!--@pie:ameaca-por-grupo-->
+                <!--@chart:ameaca-por-grupo-->
               </div>
               <details class="all-tables">
                 <summary id="tabelas-todos-os-grupos">Ver as tabelas de todos os grupos</summary>
@@ -225,7 +235,7 @@
           <section id="grafico-biomas" class="chart-card reveal" aria-labelledby="titulo-g4">
             <h3 id="titulo-g4" class="block-title" tabindex="0">E em cada bioma?</h3>
             <p class="chart-lede" tabindex="0">
-              Como as categorias de risco se distribuem em cada bioma. O portal inclui o Sistema Costeiro-Marinho na lista, e cada recorte tem a sua própria base de cálculo.
+              Como as categorias de risco se distribuem em cada bioma. O portal inclui o Sistema Costeiro-Marinho na lista.
             </p>
             <chart-explorer class="explorer" data-chart="biomas">
               <div class="explorer-controls js-only">
@@ -236,7 +246,7 @@
               </div>
               <p class="sr-only" role="status" data-status></p>
               <div data-pie-host>
-                <!--@pie:biomas-->
+                <!--@chart:biomas-->
               </div>
               <details class="all-tables">
                 <summary id="tabelas-todos-os-biomas">Ver as tabelas de todos os biomas</summary>
@@ -254,7 +264,7 @@
               <a class="link" href="https://salve.icmbio.gov.br/" target="_blank" rel="noopener noreferrer">SALVE, Sistema de Avaliação do Risco de Extinção da Biodiversidade, do ICMBio<span class="sr-only"> (abre em nova aba)</span></a>.
               Foram coletados em <time datetime="2026-11-19">19 de novembro de 2026</time> e gravados neste site, sem consultas em tempo real. Podem ter mudado desde então.
             </p>
-            <p tabindex="0"><!--@bases--></p>
+            <p tabindex="0">Os totais de cada gráfico seguem o recorte publicado pelo portal.</p>
             <p tabindex="0">
               <strong>Como citar:</strong> ICMBio, 2026. Sistema de Avaliação do Risco de Extinção da Biodiversidade – SALVE. Disponível em:
               <a class="link" href="https://salve.icmbio.gov.br/" target="_blank" rel="noopener noreferrer">https://salve.icmbio.gov.br/<span class="sr-only"> (abre em nova aba)</span></a>. Acesso em: 19 de nov. de 2026.

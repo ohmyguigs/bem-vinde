@@ -1,16 +1,21 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { renderPie, sliceName, legendText, summarize, announcement } from '../src/lib/pie.js';
-import { BIOME_OPTIONS, GROUP_OPTIONS, getChartSpec } from '../src/lib/charts.js';
+import { getChartSpec } from '../src/lib/charts.js';
 import { escapeHtml, formatInt } from '../src/lib/format.js';
 import { attr, ids, tags } from './helpers.js';
 
-const everySpec = () => [
-  getChartSpec('categorias'),
-  getChartSpec('grupos'),
-  ...GROUP_OPTIONS.map((option) => getChartSpec('ameaca-por-grupo', option.value)),
-  ...BIOME_OPTIONS.map((option) => getChartSpec('biomas', option.value)),
-];
+// A pizza fica para um gráfico em que ela é a escolha certa: três partes de um todo.
+const everySpec = () => [getChartSpec('ameacadas')];
+
+test('a pizza das espécies ameaçadas: CR, EN e VU, com o percentual calculado sobre o total', () => {
+  const spec = getChartSpec('ameacadas');
+  assert.equal(spec.type, 'pie');
+  assert.deepEqual(spec.items.map((item) => item.code), ['CR', 'EN', 'VU']);
+  assert.deepEqual(spec.items.map((item) => item.value), [361, 510, 512]);
+  assert.deepEqual(spec.items.map((item) => item.percent), [26.1, 36.9, 37.0]);
+  assert.match(spec.note, /sobre as 1\.383 espécies em categoria de ameaça/);
+});
 
 test('todo gráfico: SVG nomeado, descrito e com uma fatia nomeada por item', () => {
   for (const spec of everySpec()) {
@@ -31,7 +36,7 @@ test('todo gráfico: SVG nomeado, descrito e com uma fatia nomeada por item', ()
   }
 });
 
-test('todo gráfico: tabela equivalente com legenda, cabeçalhos com scope e todos os valores', () => {
+test('pizza: tabela equivalente com legenda, cabeçalhos com scope, todos os valores e a nota do cálculo', () => {
   for (const spec of everySpec()) {
     const html = renderPie(spec);
     assert.match(html, /<table class="data-table"><caption>[^<]+: dados do gráfico<\/caption>/, spec.caption);
@@ -43,6 +48,8 @@ test('todo gráfico: tabela equivalente com legenda, cabeçalhos com scope e tod
       assert.ok(html.includes(`<td>${formatInt(item.value)}</td>`), `${spec.caption}: falta o valor ${item.value}`);
     }
     assert.match(html, /<details class="pie-table"><summary id="[^"]+">Ver dados como tabela/);
+    assert.match(html, /<th scope="row">Total em CR, EN e VU<\/th><td>1\.383<\/td>/);
+    assert.match(html, /<p class="table-note" tabindex="0">Percentuais calculados neste site sobre as 1\.383 espécies/);
   }
 });
 
@@ -64,34 +71,16 @@ test('nome da fatia = texto da linha da legenda + posição; legenda escondida d
   assert.equal(sliceName(spec.items[1], 2, 10, spec), 'Aves: 2.069 espécies, 13,1%. Fatia 2 de 10.');
 });
 
-test('ids estáveis: a fatia de uma categoria tem o mesmo id em todos os recortes do gráfico', () => {
-  for (const spec of everySpec()) {
-    const html = renderPie(spec);
-    const present = spec.items.filter((item) => item.value > 0);
-    for (const item of present) {
-      const code = item.code.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      assert.ok(html.includes(`id="${spec.id}-fatia-${code}"`), `${spec.caption}: falta ${spec.id}-fatia-${code}`);
-      assert.ok(html.includes(`id="${spec.id}-legenda-${code}"`), `${spec.caption}: falta a legenda ${code}`);
-    }
+test('ids estáveis da pizza: fatia e linha da legenda pelo código da categoria', () => {
+  const html = renderPie(getChartSpec('ameacadas'));
+  for (const code of ['cr', 'en', 'vu']) {
+    assert.ok(html.includes(`id="pie-ameacadas-fatia-${code}"`), `falta a fatia ${code}`);
+    assert.ok(html.includes(`id="pie-ameacadas-legenda-${code}"`), `falta a legenda ${code}`);
   }
-  const cerrado = renderPie(getChartSpec('biomas', 'CERRADO'));
-  const pantanal = renderPie(getChartSpec('biomas', 'PANTANAL'));
-  assert.ok(cerrado.includes('id="pie-biomas-fatia-cr"'));
-  assert.ok(pantanal.includes('id="pie-biomas-fatia-cr"'));
+  assert.ok(html.includes('<summary id="pie-ameacadas-tabela">'));
 });
 
-test('o resumo da tabela tem nome estável por gráfico, que não muda com o filtro', () => {
-  const a = renderPie(getChartSpec('biomas', 'CERRADO')).match(/<summary id="[^"]+">(.*?)<\/summary>/)[1];
-  const b = renderPie(getChartSpec('biomas', 'PANTANAL')).match(/<summary id="[^"]+">(.*?)<\/summary>/)[1];
-  assert.equal(a, b);
-  assert.match(a, /do gráfico de risco por bioma/);
-  const names = ['categorias', 'grupos', 'ameaca-por-grupo', 'biomas'].map(
-    (chart) => renderPie(getChartSpec(chart)).match(/<summary id="[^"]+">(.*?)<\/summary>/)[1],
-  );
-  assert.equal(new Set(names).size, 4, 'um nome diferente para cada gráfico');
-});
-
-test('todo gráfico: cor nunca é o único canal (padrão, cor e contorno distintos por fatia)', () => {
+test('pizza: cor nunca é o único canal (padrão, cor e contorno distintos por fatia)', () => {
   for (const spec of everySpec()) {
     const html = renderPie(spec);
     const groups = [...html.matchAll(/<g class="slice-group"[^>]*style="([^"]+)"/g)].map((m) => m[1]);
@@ -106,7 +95,7 @@ test('todo gráfico: cor nunca é o único canal (padrão, cor e contorno distin
   }
 });
 
-test('todo gráfico: ids únicos e nenhum manipulador de evento inline nem script', () => {
+test('pizza: ids únicos e nenhum manipulador de evento inline nem script', () => {
   for (const spec of everySpec()) {
     const html = renderPie(spec);
     const all = ids(html);
@@ -116,35 +105,21 @@ test('todo gráfico: ids únicos e nenhum manipulador de evento inline nem scrip
   }
 });
 
-test('cada categoria mantém a mesma cor em todos os gráficos', () => {
-  const colorOf = (html, label) => {
-    const slice = html.match(new RegExp(`<g class="slice-group"[^>]*style="[^"]*--c:(#[0-9a-f]{6})[^"]*"><path class="slice"[^>]*aria-label="${label}`));
-    return slice?.[1];
-  };
-  const a = colorOf(renderPie(getChartSpec('categorias')), 'Criticamente em Perigo \\(CR\\)');
-  const b = colorOf(renderPie(getChartSpec('ameaca-por-grupo', 'AVES')), 'Criticamente em Perigo \\(CR\\)');
-  const c = colorOf(renderPie(getChartSpec('biomas', 'CERRADO')), 'Criticamente em Perigo \\(CR\\)');
-  assert.ok(a);
-  assert.equal(a, b);
-  assert.equal(a, c);
-});
-
 test('singular e plural: "1 espécie", "2 espécies"', () => {
   const spec = { id: 'x', caption: 'x', items: [{ label: 'A', value: 1, percent: 10 }, { label: 'B', value: 9, percent: 90 }] };
   assert.match(sliceName(spec.items[0], 1, 2, spec), /: 1 espécie,/);
   assert.match(sliceName(spec.items[1], 2, 2, spec), /: 9 espécies,/);
 });
 
-test('resumo em texto traz a conclusão do gráfico', () => {
-  const text = summarize(getChartSpec('categorias'));
-  assert.match(text, /10 fatias/);
-  assert.match(text, /Maior fatia: Menos Preocupante \(LC\), com 12\.167 \(79,0%\)/);
+test('resumo em texto da pizza traz a conclusão do gráfico', () => {
+  const text = summarize(getChartSpec('ameacadas'));
+  assert.match(text, /^Gráfico de pizza com 3 fatias, somando 1\.383 espécies\./);
+  assert.match(text, /Maior fatia: Vulnerável \(VU\), com 512 \(37,0%\)/);
+  assert.match(text, /Menor fatia: Criticamente em Perigo \(CR\), com 361 \(26,1%\)/);
 });
 
-test('anúncio do filtro descreve o resultado, não "gráfico atualizado" genérico', () => {
-  const text = announcement(getChartSpec('biomas', 'PANTANAL'));
-  assert.match(text, /Pantanal/);
-  assert.match(text, /Maior: Menos Preocupante \(LC\), 92,7%/);
+test('anúncio descreve o resultado, não "gráfico atualizado" genérico', () => {
+  assert.match(announcement(getChartSpec('ameacadas')), /3 fatias\. Maior: Vulnerável \(VU\), 37,0%\./);
 });
 
 test('rótulos com HTML são escapados', () => {

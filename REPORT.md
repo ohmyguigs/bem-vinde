@@ -8,7 +8,7 @@ Evidências de conformidade do site ohmyguigs.com, no formato do template do [A1
 ---
 
 ## 📌 Contexto da Validação
-- **Funcionalidade/Épico:** Site pessoal completo (abertura, carreira, laboratório, música e atlas da fauna brasileira com gráficos de pizza acessíveis)
+- **Funcionalidade/Épico:** Site pessoal completo (abertura, carreira, laboratório, música e atlas da fauna brasileira com gráficos de barras, colunas e pizza acessíveis)
 - **Data do Teste:** 19/11/2026
 - **Cobre a interface em:** árvore de trabalho da branch `reafctor/js-vanilla-a11y`, ainda sem commit; build verificado gerado em 19/11/2026 (`npm run check`). Depois do commit, registre aqui o hash.
 - **Versão do padrão:** 2.5.0 (A11Y.md, perfil Standard · WCAG 2.2 AA)
@@ -23,16 +23,17 @@ Evidências de conformidade do site ohmyguigs.com, no formato do template do [A1
 
 ## 2. Tab Order e Focus Management
 - [x] **Indicador de Foco:** anel de 3 px com contraste mínimo de 3:1 contra o fundo de cada tema (matriz abaixo). Nenhum `outline: none` além do destino do link de salto (`main:focus`, registrado em `A11Y-DECISIONS.md`). Nos gráficos há um anel duplo em SVG (halo branco e traço escuro). Verificado no Chrome com teclado (`npm run browser-check`): `:focus-visible` verdadeiro e anel visível.
-- [x] **Navegação Lógica:** o link de salto é o primeiro item focável (teste estático); no Chrome, Tab e Shift+Tab percorrem todas as fatias de cada gráfico, em ordem, e o Tab seguinte sai do gráfico. O índice do atlas leva a cada gráfico, e "Voltar ao topo" (um por seção, mesmo texto e mesmo destino) leva ao início da página, com o Tab seguinte no menu.
+- [x] **Navegação Lógica:** o link de salto é o primeiro item focável (teste estático); no Chrome, Tab e Shift+Tab percorrem todas as fatias, barras e colunas de cada gráfico, em ordem, e o Tab seguinte sai do gráfico. O índice do atlas leva a cada gráfico, e "Voltar ao topo" (um por seção, mesmo texto e mesmo destino) leva ao início da página, com o Tab seguinte no menu.
 - [x] **Foco Capturado (Modals/Overlays):** N/A. A página não tem modais, diálogos, popovers nem overlays.
 
 ## 3. Comportamento e Retorno de Tarefas
 - [ ] **Screen Reader Test:** **não feito.** Nenhum leitor de tela foi usado nesta sessão; o agente não tem como executá-lo. Quem deve executar: Guilherme (ou outra pessoa que use leitor de tela), pelo menos um par, por exemplo VoiceOver + Safari no macOS e NVDA + Firefox no Windows.
   - Par(es) usado(s): nenhum até aqui
   - Quem executou e quando: pendente
-  - Cenários a executar (blocos *Comportamento esperado* de cada guia): guide-charts (gráficos de pizza), guide-navigation (link de salto, menu, landmarks), guide-tables (tabelas de dados), guide-form-controls (select de filtros, switches de preferências), guide-tabs-accordion (`details` das tabelas), guide-toasts-notifications (região `role="status"` dos filtros), guide-buttons (botões de preferências).
-- [~] **Cenários de teclado dos guias, executados no Chrome por automação (`npm run browser-check`, 55 verificações, todas passando):**
-  - **guide-charts** — cada fatia é uma parada de Tab (Tab e Shift+Tab percorrem as 10 fatias); setas, Home e End também trocam de fatia; a fatia focada mostra o anel pontilhado, "explode" como no hover e acende a linha correspondente da legenda (que fica `aria-hidden`); ela recebe o nome acessível "rótulo: valor, percentual. Fatia n de N" (o texto da linha da legenda mais a posição); Esc limpa a seleção; o hover e o foco mostram os mesmos detalhes; alternativa em tabela com legenda e `scope`; o filtro troca o gráfico e anuncia o resultado ("Gráfico atualizado: …, N fatias. Maior: …"). Falta: ouvir os anúncios num leitor de tela.
+  - Cenários a executar (blocos *Comportamento esperado* de cada guia): guide-charts (gráficos de barras, colunas e pizza), guide-navigation (link de salto, menu, landmarks), guide-tables (tabelas de dados), guide-form-controls (select de filtros, switches de preferências), guide-tabs-accordion (`details` das tabelas), guide-toasts-notifications (região `role="status"` dos filtros), guide-buttons (botões de preferências).
+- [~] **Cenários de teclado dos guias, executados no Chrome por automação (`npm run browser-check`, 86 verificações, todas passando):**
+  - **guide-charts (barras e colunas)** — cada barra ou coluna é uma parada de Tab (Tab e Shift+Tab percorrem as 10 barras de categorias e as 3 colunas de cada grupo, e o 11º Tab sai do gráfico); setas, Home, End e Esc funcionam como na pizza; a barra focada recebe anel de 3 px e o rótulo da linha (nas colunas, a linha da legenda, que fica `aria-hidden`) ganha o contorno pontilhado ao mesmo tempo; o nome acessível é "rótulo: valor, percentual. Barra n de N" (ou "Coluna n de N"), e rótulos e valores visíveis ficam `aria-hidden` para nada ser lido duas vezes; a barra de 1 espécie continua visível (largura mínima de 0,5 rem); as colunas seguem a ordem VU, EN, CR do portal; o EW de Aves aparece só na tabela de dados. Falta: ouvir os anúncios num leitor de tela.
+  - **guide-charts (pizza)** — cada fatia é uma parada de Tab (Tab e Shift+Tab percorrem as 3 fatias das espécies ameaçadas); setas, Home e End também trocam de fatia; a fatia focada mostra o anel pontilhado, "explode" como no hover e acende a linha correspondente da legenda (que fica `aria-hidden`); ela recebe o nome acessível "rótulo: valor, percentual. Fatia n de N" (o texto da linha da legenda mais a posição); Esc limpa a seleção; o hover e o foco mostram os mesmos detalhes; alternativa em tabela com legenda e `scope`; o filtro troca o gráfico e anuncia o resultado ("Gráfico atualizado: …, N fatias. Maior: …"). Falta: ouvir os anúncios num leitor de tela.
   - **guide-form-controls** — `select` nativo com label visível, sem navegação nem envio ao mudar de valor; switches (`button role="switch"`) com nome fixo e estado em `aria-checked`; estado "indisponível" quando o sistema pede movimento reduzido. Falta: ouvir "switch, ligado/desligado" no leitor de tela.
   - **guide-navigation** — link de salto visível ao focar, primeiro focável, com destino existente (teste estático). Falta: pular por landmarks e listar links num leitor de tela.
   - **guide-tables** — `caption`, `th scope="col"` e `scope="row"`, rodapé com base de cálculo (teste estático). Falta: navegação por células num leitor de tela.
@@ -42,6 +43,7 @@ Evidências de conformidade do site ohmyguigs.com, no formato do template do [A1
 - [~] **Controle por Voz:** nomes acessíveis conferidos por leitura do código contra os rótulos visíveis (links incluem o texto visível, mais o sufixo "(abre em nova aba)"; os switches incluem o rótulo visível). Não testado com Voice Control, Voice Access ou Dragon.
   - Ferramenta ou método: leitura dos nomes acessíveis contra os rótulos visíveis
 - [~] **Estados interativos inventariados:**
+  - Gráficos de barras e colunas (repouso, hover, foco por teclado com Tab, Shift+Tab e setas, Esc, troca de recorte com o foco ficando no select): **navegados** no Chrome.
   - Gráfico de pizza (repouso, hover, foco por teclado com Tab, Shift+Tab e setas, Esc, troca de recorte com o foco ficando no select): **navegado** no Chrome.
   - Preferências (padrões ligados/desligados, animações ligadas, desligadas e travadas pelo sistema): **navegado** no Chrome (movimento reduzido emulado).
   - `details` das tabelas e da origem dos dados (fechado/aberto): **lido no código** (elemento nativo); não aberto e percorrido no navegador.
@@ -167,14 +169,16 @@ Não preenchido; nenhuma declaração formal (VPAT/EN 301 549) foi emitida.
 
 - **Pendente, humano:** teste com leitor de tela (§3), controle por voz e navegação em Safari e Firefox. Até lá, o status é CONDICIONAL.
 - **Roteiro manual com a extensão Atalhos Acessíveis (pendente, humano; baseado na palestra "Além do Tab", de Juliano Lopes):**
-  1. No gráfico "Quais grupos da fauna foram mais avaliados?", dê Tab até uma fatia, use o comando de adicionar atalho da extensão e grave uma combinação. Repita num link do índice do atlas ("Risco em cada bioma") e no "Voltar ao topo".
+  1. No gráfico "Quais grupos da fauna foram mais avaliados?", dê Tab até uma barra, use o comando de adicionar atalho da extensão e grave uma combinação. Repita num link do índice do atlas ("Risco em cada bioma") e no "Voltar ao topo".
   2. Recarregue a página e execute os atalhos: cada um deve focar o elemento certo.
-  3. No filtro de bioma, troque o recorte e execute o atalho de uma fatia que existe nos dois recortes (por exemplo, Menos Preocupante, `pie-biomas-fatia-lc`). Registre se a extensão ainda encontra o elemento. Para uma categoria que não existe no novo recorte, o atalho não encontra o elemento, e isso é esperado.
-  4. Com NVDA + Firefox ou VoiceOver + Safari, confirme que cada fatia é anunciada uma vez ("Aves: 2.069 espécies, 13,1%. Fatia 2 de 10.") e que a legenda não é lida de novo.
+  3. No filtro de bioma, troque o recorte e execute o atalho de uma barra que existe nos dois recortes (por exemplo, Menos Preocupante, `barras-biomas-barra-lc`). Registre se a extensão ainda encontra o elemento. Para uma categoria que não existe no novo recorte, o atalho não encontra o elemento, e isso é esperado.
+  4. Com NVDA + Firefox ou VoiceOver + Safari, confirme que cada barra é anunciada uma vez ("Aves: 2.069 espécies, 13,1%. Barra 2 de 10.") e que o rótulo e o valor visíveis não são lidos de novo.
   5. Anote o par de leitor de tela e navegador, quem testou e quando, e preencha o §3.
-- **Custo de Tab aceito:** cada gráfico tem de 4 a 10 paradas de Tab. O índice do atlas e o "Voltar ao topo" existem para compensar.
+- **Custo de Tab aceito:** cada gráfico tem de 3 a 10 paradas de Tab. O índice do atlas e o "Voltar ao topo" existem para compensar.
 - **Navegadores:** verificado só no Chrome. Animações ligadas à rolagem (`animation-timeline: view()`) só existem em navegadores que suportam a propriedade; nos demais a página aparece sem essas entradas, sem perda de conteúdo.
-- **Bases do SALVE diferentes:** o portal informa 15.974 espécies avaliadas no painel geral, 15.410 na soma das categorias e 15.781 na soma dos grupos. Os números foram reproduzidos sem ajuste e a página explica a diferença.
+- **Totais do SALVE:** os números foram reproduzidos sem ajuste, e a página traz uma nota neutra de que os totais seguem cada recorte publicado pelo portal.
 - **Dado do portal:** o total de espécies em categoria de ameaça (1.383) traz o aviso do próprio SALVE de que não reflete a lista oficial; o aviso aparece ao lado do número.
-- **Fatias muito finas:** no gráfico de categorias, algumas fatias têm menos de 1 espécie por 1.000 (0,0%). O anel de foco delas vira uma linha-guia do centro à borda, sem alterar as proporções.
+- **Valores muito pequenos:** no gráfico de categorias, três categorias têm menos de 1 espécie por 1.000 (0,0%). Cada barra tem largura mínima de 0,5 rem para continuar visível e focável, e o percentual aparece como o portal o publica.
+- **Pizza das ameaçadas:** o portal publica o total de 1.383, mas não o percentual de cada categoria. Os percentuais (26,1%, 36,9% e 37,0%) são calculados neste site, e a tabela do gráfico diz isso.
+- **Mapa de biomas:** o portal usa um mapa clicável. Este site usa um filtro nativo com barras, que entrega a mesma tabela por bioma e funciona por teclado.
 - **Comando para reproduzir:** `npm run check` (testes e build), `npm run browser-check` (Chrome) e `npm run lighthouse`.
