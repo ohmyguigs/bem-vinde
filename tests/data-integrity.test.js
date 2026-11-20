@@ -10,7 +10,7 @@ import {
   THREATENED_BY_GROUP,
   TOTALS,
 } from '../src/data/salve.js';
-import { BIOME_OPTIONS, GROUP_OPTIONS } from '../src/lib/charts.js';
+import { BIOME_OPTIONS, GROUP_OPTIONS, getChartSpec } from '../src/lib/charts.js';
 
 const sum = (rows) => rows.reduce((total, row) => total + row.total, 0);
 
@@ -47,7 +47,7 @@ test('percentuais por bioma batem com os totais', () => {
   assertPercentagesMatch('bioma/desconhecido', BIOMES_UNKNOWN.categories);
 });
 
-test('bases conhecidas do portal (garantem a nota sobre bases diferentes)', () => {
+test('somas conhecidas do portal (protegem a transcrição dos dados)', () => {
   assert.equal(sum(EVALUATED_CATEGORIES), 15410);
   assert.equal(sum(EVALUATED_GROUPS), 15781);
   assert.equal(TOTALS.evaluated, 15974);
@@ -56,6 +56,22 @@ test('bases conhecidas do portal (garantem a nota sobre bases diferentes)', () =
 test('espécies em categoria de ameaça = CR + EN + VU das categorias avaliadas', () => {
   const total = ['CR', 'EN', 'VU'].reduce((acc, code) => acc + EVALUATED_CATEGORIES.find((row) => row.code === code).total, 0);
   assert.equal(total, TOTALS.threatened);
+});
+
+test('pizza das ameaçadas: CR + EN + VU somam o painel do portal e os percentuais fecham em 100%', () => {
+  const spec = getChartSpec('ameacadas');
+  const total = spec.items.reduce((acc, item) => acc + item.value, 0);
+  assert.equal(total, TOTALS.threatened);
+  assertPercentagesMatch('ameacadas', spec.items.map((item) => ({ code: item.code, total: item.value, percent: item.percent })));
+  const percents = spec.items.reduce((acc, item) => acc + item.percent, 0);
+  assert.ok(Math.abs(percents - 100) <= 0.15, `percentuais somam ${percents}`);
+});
+
+test('gráfico de ameaça por grupo: o total do título é a soma de CR, EN e VU do grupo', () => {
+  for (const [group, rows] of Object.entries(THREATENED_BY_GROUP)) {
+    const total = rows.filter((row) => ['CR', 'EN', 'VU'].includes(row.code)).reduce((acc, row) => acc + row.total, 0);
+    assert.ok(getChartSpec('ameaca-por-grupo', group).caption.endsWith(`${total.toLocaleString('pt-BR')} no total`), group);
+  }
 });
 
 test('painel de números tem os valores publicados pelo portal', () => {

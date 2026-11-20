@@ -124,74 +124,103 @@ const check = (name, ok, detail = '') => {
 };
 
 const PIE = (id) => `document.querySelector('[data-pie-id="${id}"]')`;
+const BARS = (id) => `document.querySelector('[data-chart-id="${id}"]')`;
 
 try {
   await send('Page.enable');
   await send('Runtime.enable');
   await send('Log.enable');
 
-  // ---------- Teclado e foco nos gráficos ----------
+  // ---------- Teclado e foco: pizza das espécies ameaçadas ----------
   await visit();
-  check('componentes registrados', await evaluate(`['accessible-pie','chart-explorer','chart-settings'].every((n) => !!customElements.get(n))`));
+  check('componentes registrados', await evaluate(`['accessible-pie','accessible-bars','chart-explorer','chart-settings'].every((n) => !!customElements.get(n))`));
 
   // Entre os switches e a primeira fatia há textos que também são paradas de Tab (título, KPIs, lide do gráfico).
-  await evaluate(`document.querySelector('#grafico-categorias .chart-lede').focus()`);
+  await evaluate(`document.querySelector('#grafico-ameacadas .chart-lede').focus()`);
   check('o texto do gráfico é uma parada de Tab', await evaluate(`document.activeElement.matches('.chart-lede[tabindex="0"]')`));
   await key('Tab', 9);
   let now = await active();
-  check('Tab entra no primeiro gráfico, na primeira fatia', now.cls === 'slice' && now.tabindex === '0', now.label);
+  check('Tab entra na pizza das ameaçadas, na primeira fatia', now.cls === 'slice' && now.tabindex === '0', now.label);
   check('foco por teclado é :focus-visible', now.focusVisible);
-  check('anel de foco visível', await evaluate(`!!${PIE('pie-categorias')}.querySelector('.rings[data-visible]')`));
-  check('fatia minúscula mostra linha-guia', /^M 50 50 L /.test(await evaluate(`${PIE('pie-categorias')}.querySelector('.ring').getAttribute('d')`)));
-
-  check('toda fatia é uma parada de Tab (tabindex 0)', await evaluate(`[...${PIE('pie-categorias')}.querySelectorAll('.slice')].every((s) => s.getAttribute('tabindex') === '0')`));
-  check('legenda escondida do leitor de tela (aria-hidden)', await evaluate(`!!${PIE('pie-categorias')}.querySelector('.legend[aria-hidden="true"]')`));
-  const legendFocus = () => json(`[...${PIE('pie-categorias')}.querySelectorAll('.legend-item')].map((li, i) => li.hasAttribute('data-focused') ? i : -1).filter((i) => i >= 0)`);
-  check('foco na fatia 1 acende só a linha 1 da legenda', JSON.stringify(await legendFocus()) === '[0]', JSON.stringify(await legendFocus()));
-  check('a linha focada da legenda tem contorno pontilhado visível', await evaluate(`(() => { const s = getComputedStyle(${PIE('pie-categorias')}.querySelector('.legend-item[data-focused]')); return s.outlineStyle === 'dashed' && parseFloat(s.outlineWidth) >= 3; })()`));
-  check('o nome da fatia começa com o texto da linha da legenda', await evaluate(`(() => { const p = ${PIE('pie-categorias')}; const label = p.querySelectorAll('.slice')[0].getAttribute('aria-label'); const row = p.querySelectorAll('.legend-item')[0]; return label.startsWith(row.querySelector('.legend-label').textContent + ':'); })()`));
-
+  check('anel de foco visível', await evaluate(`!!${PIE('pie-ameacadas')}.querySelector('.rings[data-visible]')`));
+  check('o anel segue o contorno da fatia', /A 42 42/.test(await evaluate(`${PIE('pie-ameacadas')}.querySelector('.ring').getAttribute('d')`)));
+  check('toda fatia é uma parada de Tab (tabindex 0)', await evaluate(`[...${PIE('pie-ameacadas')}.querySelectorAll('.slice')].every((s) => s.getAttribute('tabindex') === '0')`));
+  check('legenda escondida do leitor de tela (aria-hidden)', await evaluate(`!!${PIE('pie-ameacadas')}.querySelector('.legend[aria-hidden="true"]')`));
+  const pieLegendFocus = () => json(`[...${PIE('pie-ameacadas')}.querySelectorAll('.legend-item')].map((li, i) => li.hasAttribute('data-focused') ? i : -1).filter((i) => i >= 0)`);
+  check('foco na fatia 1 acende só a linha 1 da legenda', JSON.stringify(await pieLegendFocus()) === '[0]', JSON.stringify(await pieLegendFocus()));
+  check('a linha focada da legenda tem contorno pontilhado visível', await evaluate(`(() => { const s = getComputedStyle(${PIE('pie-ameacadas')}.querySelector('.legend-item[data-focused]')); return s.outlineStyle === 'dashed' && parseFloat(s.outlineWidth) >= 3; })()`));
+  check('o nome da fatia começa com o texto da linha da legenda', await evaluate(`(() => { const p = ${PIE('pie-ameacadas')}; const label = p.querySelectorAll('.slice')[0].getAttribute('aria-label'); const row = p.querySelectorAll('.legend-item')[0]; return label.startsWith(row.querySelector('.legend-label').textContent + ':'); })()`));
   await key('Tab', 9);
   now = await active();
-  check('Tab vai para a fatia 2', /Fatia 2 de 10/.test(now.label ?? '') && now.cls === 'slice', now.label);
-  check('foco na fatia 2 acende só a linha 2 da legenda', JSON.stringify(await legendFocus()) === '[1]', JSON.stringify(await legendFocus()));
-  check('a fatia 2 "explode" como no hover', await evaluate(`getComputedStyle(${PIE('pie-categorias')}.querySelectorAll('.slice-group')[1]).translate`).then((t) => t !== 'none' && t !== '0px'));
+  check('Tab vai para a fatia 2', /Fatia 2 de 3/.test(now.label ?? '') && now.cls === 'slice', now.label);
+  check('foco na fatia 2 acende só a linha 2 da legenda', JSON.stringify(await pieLegendFocus()) === '[1]', JSON.stringify(await pieLegendFocus()));
+  check('a fatia 2 "explode" como no hover', await evaluate(`getComputedStyle(${PIE('pie-ameacadas')}.querySelectorAll('.slice-group')[1]).translate`).then((t) => t !== 'none' && t !== '0px'));
+  check('linha de detalhes acompanha a fatia', /Em Perigo/.test(await evaluate(`${PIE('pie-ameacadas')}.querySelector('.pie-readout').textContent`)));
   await key('Tab', 9, 8);
-  now = await active();
-  check('Shift+Tab volta para a fatia 1', /Fatia 1 de 10/.test(now.label ?? ''), now.label);
-
+  check('Shift+Tab volta para a fatia 1', /Fatia 1 de 3/.test((await active()).label ?? ''));
   await key('ArrowRight', 39);
-  now = await active();
-  check('seta → vai para a fatia 2', /Fatia 2 de 10/.test(now.label ?? ''), now.label);
-  check('linha de detalhes acompanha a fatia', /Extinta na Natureza/.test(await evaluate(`${PIE('pie-categorias')}.querySelector('.pie-readout').textContent`)));
+  check('seta → vai para a fatia 2', /Fatia 2 de 3/.test((await active()).label ?? ''));
   await key('End', 35);
-  check('End vai à última fatia', /Fatia 10 de 10/.test((await active()).label ?? ''));
+  check('End vai à última fatia', /Fatia 3 de 3/.test((await active()).label ?? ''));
   await key('ArrowRight', 39);
-  check('→ na última volta à primeira', /Fatia 1 de 10/.test((await active()).label ?? ''));
+  check('→ na última volta à primeira', /Fatia 1 de 3/.test((await active()).label ?? ''));
   await key('ArrowLeft', 37);
-  check('← na primeira vai à última', /Fatia 10 de 10/.test((await active()).label ?? ''));
-  await key('Home', 36);
-  await key('ArrowLeft', 37);
-  await key('ArrowLeft', 37);
-  await key('ArrowLeft', 37);
-  check('anel segue o contorno de fatia grande', /A 42 42/.test(await evaluate(`${PIE('pie-categorias')}.querySelector('.ring').getAttribute('d')`)));
+  check('← na primeira vai à última', /Fatia 3 de 3/.test((await active()).label ?? ''));
   await key('Escape', 27);
-  check('Esc limpa seleção, anel e legenda', await evaluate(`!${PIE('pie-categorias')}.querySelector('.slice-group[data-active]') && !${PIE('pie-categorias')}.querySelector('.rings[data-visible]') && !${PIE('pie-categorias')}.querySelector('.legend-item[data-focused]')`));
-
-  // Tab percorre as 10 fatias, na ordem, e o 11º Tab sai do gráfico.
+  check('Esc limpa seleção, anel e legenda', await evaluate(`!${PIE('pie-ameacadas')}.querySelector('.slice-group[data-active]') && !${PIE('pie-ameacadas')}.querySelector('.rings[data-visible]') && !${PIE('pie-ameacadas')}.querySelector('.legend-item[data-focused]')`));
   await key('Home', 36);
-  const walked = [(await active()).label];
+  const pieWalk = [(await active()).label];
+  for (let i = 0; i < 2; i++) {
+    await key('Tab', 9);
+    pieWalk.push((await active()).label);
+  }
+  check('Tab percorre as 3 fatias em ordem', pieWalk.every((label, i) => new RegExp(`Fatia ${i + 1} de 3\\.`).test(label ?? '')), pieWalk.map((l) => (l ?? '').slice(-16)).join(' | '));
+  await key('Tab', 9);
+  check('o próximo Tab sai da pizza', (await active()).cls !== 'slice');
+  check('ao sair, a legenda perde o destaque', (await pieLegendFocus()).length === 0);
+
+  // ---------- Teclado e foco: barras horizontais (categorias) ----------
+  await evaluate(`document.querySelector('#grafico-categorias .chart-lede').focus()`);
+  await key('Tab', 9);
+  now = await active();
+  check('Tab entra nas barras de categorias, na primeira barra', now.cls === 'bar' && now.tabindex === '0' && /Barra 1 de 10\./.test(now.label ?? ''), now.label);
+  check('foco por teclado na barra é :focus-visible', now.focusVisible);
+  check('toda barra é uma parada de Tab (tabindex 0)', await evaluate(`[...${BARS('barras-categorias')}.querySelectorAll('.bar')].every((b) => b.getAttribute('tabindex') === '0')`));
+  check('rótulos e valores escondidos do leitor de tela (aria-hidden)', await evaluate(`[...${BARS('barras-categorias')}.querySelectorAll('.bar-label, .bar-value')].every((e) => e.getAttribute('aria-hidden') === 'true')`));
+  const rowFocus = (id) => json(`[...${BARS(id)}.querySelectorAll('.bar-row, .legend-item')].map((e, i) => e.hasAttribute('data-focused') ? i : -1).filter((i) => i >= 0)`);
+  check('foco na barra 1 acende só o rótulo da linha 1', JSON.stringify(await rowFocus('barras-categorias')) === '[0]', JSON.stringify(await rowFocus('barras-categorias')));
+  check('a linha focada tem contorno pontilhado visível', await evaluate(`(() => { const s = getComputedStyle(${BARS('barras-categorias')}.querySelector('.bar-row[data-focused]')); return s.outlineStyle === 'dashed' && parseFloat(s.outlineWidth) >= 3; })()`));
+  check('a barra focada tem anel de foco de 3 px', await evaluate(`(() => { const s = getComputedStyle(document.activeElement); return s.outlineStyle === 'solid' && parseFloat(s.outlineWidth) >= 3; })()`));
+  check('o nome da barra começa com o texto do rótulo', await evaluate(`(() => { const row = ${BARS('barras-categorias')}.querySelector('.bar-row'); return row.querySelector('.bar').getAttribute('aria-label').startsWith(row.querySelector('.bar-label').textContent + ':'); })()`));
+  check('a barra de 1 espécie (EW) continua visível (largura mínima)', await evaluate(`${BARS('barras-categorias')}.querySelector('#barras-categorias-barra-ew').getBoundingClientRect().width >= 7`));
+  check('a barra maior (LC) ocupa a faixa toda, e a menor é bem mais curta', await evaluate(`(() => { const w = (code) => ${BARS('barras-categorias')}.querySelector('#barras-categorias-barra-' + code).getBoundingClientRect().width; return w('lc') > 5 * w('dd') && w('dd') > w('ew'); })()`));
+  await key('Tab', 9);
+  check('Tab vai para a barra 2 e acende só a linha 2', /Barra 2 de 10/.test((await active()).label ?? '') && JSON.stringify(await rowFocus('barras-categorias')) === '[1]', (await active()).label);
+  await key('Tab', 9, 8);
+  check('Shift+Tab volta para a barra 1', /Barra 1 de 10/.test((await active()).label ?? ''));
+  await key('ArrowDown', 40);
+  check('seta ↓ vai para a barra 2', /Barra 2 de 10/.test((await active()).label ?? ''));
+  await key('End', 35);
+  check('End vai à última barra', /Barra 10 de 10/.test((await active()).label ?? ''));
+  await key('ArrowRight', 39);
+  check('→ na última volta à primeira', /Barra 1 de 10/.test((await active()).label ?? ''));
+  await key('ArrowLeft', 37);
+  check('← na primeira vai à última', /Barra 10 de 10/.test((await active()).label ?? ''));
+  await key('Escape', 27);
+  check('Esc limpa o destaque', await evaluate(`!${BARS('barras-categorias')}.querySelector('[data-active], [data-focused]')`));
+  await key('Home', 36);
+  const barWalk = [(await active()).label];
   for (let i = 0; i < 9; i++) {
     await key('Tab', 9);
-    walked.push((await active()).label);
+    barWalk.push((await active()).label);
   }
-  check('Tab percorre as 10 fatias em ordem', walked.every((label, i) => new RegExp(`Fatia ${i + 1} de 10\\.`).test(label ?? '')), walked.map((l) => (l ?? '').slice(-16)).join(' | '));
-  check('na última fatia, só a linha 10 da legenda está focada', JSON.stringify(await legendFocus()) === '[9]', JSON.stringify(await legendFocus()));
+  check('Tab percorre as 10 barras em ordem', barWalk.every((label, i) => new RegExp(`Barra ${i + 1} de 10\\.`).test(label ?? '')), barWalk.map((l) => (l ?? '').slice(-16)).join(' | '));
+  check('na última barra, só a linha 10 está focada', JSON.stringify(await rowFocus('barras-categorias')) === '[9]', JSON.stringify(await rowFocus('barras-categorias')));
   await key('Tab', 9);
-  check('o próximo Tab sai do gráfico', (await active()).cls !== 'slice');
-  check('ao sair, a legenda perde o destaque', (await legendFocus()).length === 0);
+  check('o próximo Tab sai das barras', (await active()).cls !== 'bar');
+  check('ao sair, a linha perde o destaque', (await rowFocus('barras-categorias')).length === 0);
   await key('Tab', 9, 8);
-  check('Shift+Tab volta para a última fatia', /Fatia 10 de 10/.test((await active()).label ?? ''));
+  check('Shift+Tab volta para a última barra', /Barra 10 de 10/.test((await active()).label ?? ''));
 
   // ---------- Filtros ----------
   await evaluate(`document.querySelector('#filtro-grupo').scrollIntoView()`);
@@ -201,16 +230,25 @@ try {
   await sleep(200);
   check('depois de trocar o filtro, o foco continua no select', await evaluate(`document.activeElement.id === 'filtro-grupo'`));
   await key('Tab', 9);
-  check('o próximo Tab entra na primeira fatia do gráfico novo', (await active()).cls === 'slice' && /Fatia 1 de 4/.test((await active()).label ?? ''), (await active()).label);
-  check('filtro troca o gráfico no lugar', /Aves/.test(await evaluate(`${PIE('pie-ameaca')}.querySelector('.pie-caption').textContent`)) && (await evaluate(`${PIE('pie-ameaca')}.querySelectorAll('.slice').length`)) === 4);
+  check('o próximo Tab entra na primeira coluna do gráfico novo', (await active()).cls === 'bar' && /Coluna 1 de 3/.test((await active()).label ?? ''), (await active()).label);
+  check('o filtro troca o gráfico no lugar: Aves, 242 no total, 3 colunas', /Aves, 242 no total/.test(await evaluate(`${BARS('colunas-ameaca')}.querySelector('.pie-caption').textContent`)) && (await evaluate(`${BARS('colunas-ameaca')}.querySelectorAll('.bar').length`)) === 3);
+  check('colunas na ordem do portal: VU, EN, CR', JSON.stringify(await json(`[...${BARS('colunas-ameaca')}.querySelectorAll('.bar-code')].map((e) => e.textContent)`)) === '["VU","EN","CR"]');
+  check('a linha da legenda acende junto com a coluna focada', JSON.stringify(await rowFocus('colunas-ameaca')) === '[0]', JSON.stringify(await rowFocus('colunas-ameaca')));
+  check('as colunas crescem com o percentual (VU 54,3% > EN 32,1% > CR 13,2%)', await evaluate(`(() => { const h = (c) => document.getElementById('colunas-ameaca-coluna-' + c).getBoundingClientRect().height; return h('vu') > h('en') && h('en') > h('cr'); })()`));
+  check('o EW de Aves não é coluna, mas a tabela de dados o traz', await evaluate(`!document.getElementById('colunas-ameaca-coluna-ew') && /Extinta na Natureza/.test(${BARS('colunas-ameaca')}.querySelector('.data-table').textContent)`));
+  await key('Tab', 9);
+  await key('Tab', 9);
+  check('Tab percorre as 3 colunas', /Coluna 3 de 3/.test((await active()).label ?? '') && JSON.stringify(await rowFocus('colunas-ameaca')) === '[2]', (await active()).label);
+  await key('Tab', 9);
+  check('o próximo Tab sai das colunas', (await active()).cls !== 'bar');
   const status = await evaluate(`document.querySelector('#filtro-grupo').closest('chart-explorer').querySelector('[data-status]').textContent`);
-  check('resultado anunciado em role="status"', /Aves/.test(status) && /Maior/.test(status), status);
-  check('novo gráfico já nasce navegável', (await evaluate(`${PIE('pie-ameaca')}.querySelector('.slice').getAttribute('tabindex')`)) === '0');
+  check('resultado anunciado em role="status"', /Aves/.test(status) && /3 colunas/.test(status) && /Maior/.test(status), status);
+  check('novo gráfico já nasce navegável', (await evaluate(`${BARS('colunas-ameaca')}.querySelector('.bar').getAttribute('tabindex')`)) === '0');
   await evaluate(`(() => { const s = document.querySelector('#filtro-bioma'); s.value = 'PANTANAL'; s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
   await sleep(200);
-  check('filtro de bioma funciona', /Pantanal/.test(await evaluate(`${PIE('pie-biomas')}.querySelector('.pie-caption').textContent`)));
-  check('ids das fatias continuam estáveis depois do filtro', await evaluate(`!!document.getElementById('pie-biomas-fatia-lc') && !!document.getElementById('pie-biomas-fatia-cr')`));
-  check('depois do filtro, todas as fatias novas são paradas de Tab', await evaluate(`[...${PIE('pie-biomas')}.querySelectorAll('.slice')].every((s) => s.getAttribute('tabindex') === '0')`));
+  check('filtro de bioma funciona', /Pantanal/.test(await evaluate(`${BARS('barras-biomas')}.querySelector('.pie-caption').textContent`)) && (await evaluate(`${BARS('barras-biomas')}.querySelectorAll('.bar').length`)) === 8);
+  check('ids das barras continuam estáveis depois do filtro', await evaluate(`!!document.getElementById('barras-biomas-barra-lc') && !!document.getElementById('barras-biomas-barra-cr')`));
+  check('depois do filtro, todas as barras novas são paradas de Tab', await evaluate(`[...${BARS('barras-biomas')}.querySelectorAll('.bar')].every((b) => b.getAttribute('tabindex') === '0')`));
   check('os ids da página continuam únicos depois do filtro', await evaluate(`(() => { const ids = [...document.querySelectorAll('[id]')].map((e) => e.id); return new Set(ids).size === ids.length; })()`));
 
   // ---------- Índice do atlas e "Voltar ao topo" ----------
@@ -230,25 +268,37 @@ try {
   check('depois de "Voltar ao topo", o Tab cai no menu (marca do site)', await evaluate(`document.activeElement.classList.contains('brand')`), await evaluate(`document.activeElement.id || document.activeElement.className || document.activeElement.tagName`));
 
   // ---------- Mouse ----------
-  await evaluate(`${PIE('pie-grupos')}.scrollIntoView({ block: 'center' })`);
+  await evaluate(`${BARS('barras-grupos')}.scrollIntoView({ block: 'center' })`);
   await scrollIdle();
   await sleep(300);
-  const box = await json(`(() => { const r = ${PIE('pie-grupos')}.querySelectorAll('.slice')[6].getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`);
+  const box = await json(`(() => { const r = ${BARS('barras-grupos')}.querySelectorAll('.bar')[6].getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`);
   await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: box.x, y: box.y });
   await sleep(300);
-  check('hover mostra os detalhes da fatia', /Peixes continentais/.test(await evaluate(`${PIE('pie-grupos')}.querySelector('.pie-readout').textContent`)));
-  const moved = await evaluate(`getComputedStyle(${PIE('pie-grupos')}.querySelectorAll('.slice-group')[6]).translate`);
+  check('hover acende a linha da barra (Peixes continentais)', await evaluate(`(() => { const r = ${BARS('barras-grupos')}.querySelectorAll('.bar-row')[6]; return r.hasAttribute('data-active') && /Peixes continentais/.test(r.textContent); })()`));
+  check('hover não confunde com foco por teclado', await evaluate(`!${BARS('barras-grupos')}.querySelector('[data-focused]')`));
+  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 4, y: 4 });
+  await sleep(300);
+  check('ao sair, o destaque some', await evaluate(`!${BARS('barras-grupos')}.querySelector('[data-active]')`));
+  await evaluate(`${PIE('pie-ameacadas')}.scrollIntoView({ block: 'center' })`);
+  await scrollIdle();
+  await sleep(300);
+  const pieBox = await json(`(() => { const r = ${PIE('pie-ameacadas')}.querySelectorAll('.slice')[2].getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`);
+  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: pieBox.x, y: pieBox.y });
+  await sleep(300);
+  check('hover na pizza mostra os detalhes da fatia', /Vulnerável/.test(await evaluate(`${PIE('pie-ameacadas')}.querySelector('.pie-readout').textContent`)));
+  const moved = await evaluate(`getComputedStyle(${PIE('pie-ameacadas')}.querySelectorAll('.slice-group')[2]).translate`);
   check('hover "explode" a fatia', moved !== 'none' && moved !== '0px', moved);
   await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 4, y: 4 });
   await sleep(300);
-  check('ao sair, os detalhes voltam ao padrão', await evaluate(`${PIE('pie-grupos')}.querySelector('.pie-readout').textContent.startsWith('Passe o mouse')`));
+  check('ao sair, os detalhes voltam ao padrão', await evaluate(`${PIE('pie-ameacadas')}.querySelector('.pie-readout').textContent.startsWith('Passe o mouse')`));
 
   // ---------- Preferências ----------
   await evaluate(`document.querySelector('[data-setting="patterns"]').click()`);
   const off = await json(`({ cls: document.documentElement.classList.contains('no-patterns'), checked: document.querySelector('[data-setting="patterns"]').getAttribute('aria-checked'), fill: getComputedStyle(document.querySelector('.slice')).fill })`);
   check('desligar padrões: classe, aria-checked e preenchimento sólido', off.cls && off.checked === 'false' && /^rgb/.test(off.fill), off.fill);
   await evaluate(`document.querySelector('[data-setting="patterns"]').click()`);
-  check('religar padrões', await evaluate(`getComputedStyle(document.querySelector('.slice')).fill.startsWith('url(')`));
+  check('desligar padrões também vale nas barras', await evaluate(`(() => { document.querySelector('[data-setting="patterns"]').click(); const off = /^rgb/.test(getComputedStyle(document.querySelector('.bar-fill rect')).fill); document.querySelector('[data-setting="patterns"]').click(); return off; })()`));
+  check('religar padrões', await evaluate(`getComputedStyle(document.querySelector('.slice')).fill.startsWith('url(') && getComputedStyle(document.querySelector('.bar-fill rect')).fill.startsWith('url(')`));
   check('o nome do switch nunca muda', (await evaluate(`document.querySelector('[data-setting="patterns"] .switch-label').textContent`)) === 'Padrões de preenchimento nos gráficos');
   await evaluate(`localStorage.clear()`);
 
@@ -277,8 +327,8 @@ try {
 
   // ---------- Sem JavaScript ----------
   await visit({ scripts: false });
-  const plain = await json(`({ selects: [...document.querySelectorAll('select')].filter((s) => s.offsetParent !== null).length, jsOnly: [...document.querySelectorAll('.js-only')].filter((e) => e.offsetParent !== null).length, tables: document.querySelectorAll('table').length, slices: document.querySelectorAll('.slice').length, kpi: document.querySelector('.kpi-value').textContent.slice(0, 6) })`);
-  check('sem JavaScript: números, tabelas e gráficos presentes', plain.kpi === '15.974' && plain.tables === 21 && plain.slices > 0, JSON.stringify(plain));
+  const plain = await json(`({ selects: [...document.querySelectorAll('select')].filter((s) => s.offsetParent !== null).length, jsOnly: [...document.querySelectorAll('.js-only')].filter((e) => e.offsetParent !== null).length, tables: document.querySelectorAll('table').length, slices: document.querySelectorAll('.slice').length, bars: document.querySelectorAll('.bar').length, kpi: document.querySelector('.kpi-value').textContent.slice(0, 6) })`);
+  check('sem JavaScript: números, tabelas e gráficos presentes', plain.kpi === '15.974' && plain.tables === 22 && plain.slices === 3 && plain.bars === 10 + 10 + 3 + 10, JSON.stringify(plain));
   check('sem JavaScript: controles que dependem de script ficam ocultos', plain.selects === 0 && plain.jsOnly === 0);
 
   check('sem erros nem avisos no console', consoleProblems.length === 0, consoleProblems.join(' | '));

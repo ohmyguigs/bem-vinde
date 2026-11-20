@@ -16,6 +16,8 @@
  *    próprio nome acessível, e a legenda também é aria-hidden, então não há
  *    fala duplicada).
  */
+import { nextIndex } from '../lib/chart-keys.js';
+
 /** Abaixo deste ângulo (graus) a fatia é fina demais para ver o contorno. */
 const TINY_ANGLE = 2.5;
 
@@ -88,29 +90,12 @@ export class AccessiblePie extends HTMLElement {
   #onKeydown = (event) => {
     const current = this.#paths.indexOf(event.target);
     if (current < 0 || event.altKey || event.ctrlKey || event.metaKey) return;
-    const last = this.#paths.length - 1;
-    let target = -1;
-    switch (event.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-        target = current === last ? 0 : current + 1;
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        target = current === 0 ? last : current - 1;
-        break;
-      case 'Home':
-        target = 0;
-        break;
-      case 'End':
-        target = last;
-        break;
-      case 'Escape':
-        this.#clear();
-        return;
-      default:
-        return;
+    if (event.key === 'Escape') {
+      this.#clear();
+      return;
     }
+    const target = nextIndex(event.key, current, this.#paths.length - 1);
+    if (target < 0) return;
     event.preventDefault();
     this.#paths[target].focus();
   };

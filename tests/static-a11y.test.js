@@ -102,7 +102,7 @@ test('índice do atlas: nav nomeada, cada link leva a um destino existente e a t
   const targets = [...nav[1].matchAll(/href="#([^"]+)"/g)].map((m) => m[1]);
   const all = ids(body);
   for (const target of targets) assert.ok(all.includes(target), `índice aponta para #${target}, que não existe`);
-  for (const required of ['grafico-categorias', 'grafico-grupos', 'grafico-ameaca-por-grupo', 'grafico-biomas', 'preferencias', 'fonte-dos-dados']) {
+  for (const required of ['grafico-ameacadas', 'grafico-categorias', 'grafico-grupos', 'grafico-ameaca-por-grupo', 'grafico-biomas', 'preferencias', 'fonte-dos-dados']) {
     assert.ok(targets.includes(required), `índice sem link para #${required}`);
   }
   assert.equal(new Set(targets).size, targets.length, 'destinos repetidos no índice');
@@ -136,9 +136,25 @@ test('nomes acessíveis: o mesmo nome nunca leva a destinos diferentes (SC 2.4.4
 
 test('destinos importantes: ids estáveis nos controles e nas fatias dos gráficos', () => {
   const all = ids(body);
-  for (const id of ['preferencia-padroes', 'preferencia-animacoes', 'filtro-grupo', 'filtro-bioma', 'tabelas-todos-os-grupos', 'tabelas-todos-os-biomas', 'origem-dos-graficos', 'pie-biomas-fatia-lc', 'pie-categorias-fatia-cr', 'pie-grupos-fatia-aves', 'pie-categorias-tabela']) {
+  for (const id of ['preferencia-padroes', 'preferencia-animacoes', 'filtro-grupo', 'filtro-bioma', 'tabelas-todos-os-grupos', 'tabelas-todos-os-biomas', 'origem-dos-graficos', 'pie-ameacadas-fatia-cr', 'barras-categorias-barra-cr', 'barras-grupos-barra-aves', 'colunas-ameaca-coluna-vu', 'barras-biomas-barra-lc', 'barras-categorias-tabela']) {
     assert.ok(all.includes(id), `falta o id estável #${id}`);
   }
+});
+
+test('nota neutra sobre os totais: sem os números que comparam os gráficos', () => {
+  assert.match(body, /Os totais de cada gráfico seguem o recorte publicado pelo portal\./);
+  // O total de cada recorte continua no rodapé da tabela e no resumo do próprio gráfico, sem comparação entre eles.
+  const outsideTables = body.replace(/<table[\s\S]*?<\/table>/g, '').replace(/<p class="pie-summary"[\s\S]*?<\/p>/g, '');
+  assert.doesNotMatch(outsideTables, /15\.410|15\.781/, 'texto comparando os totais');
+  assert.doesNotMatch(body, /Atenção às bases|base de cálculo|usado como base/);
+  assert.match(body, /Total do recorte/);
+});
+
+test('o painel de ameaça: pizza logo depois dos números, antes dos gráficos de categorias', () => {
+  const order = ['id="panorama"', 'id="grafico-ameacadas"', 'id="grafico-categorias"', 'id="grafico-grupos"', 'id="grafico-ameaca-por-grupo"', 'id="grafico-biomas"'].map((needle) => body.indexOf(needle));
+  assert.ok(order.every((index) => index > 0), 'seção ausente');
+  assert.deepEqual([...order].sort((a, b) => a - b), order, 'ordem dos blocos do atlas');
+  assert.match(body, /O portal avisa que o total de 1\.383 espécies não reflete a lista oficial/);
 });
 
 test('imagens com alt e nenhum elemento de mídia ou incorporação na página', () => {

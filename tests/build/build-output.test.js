@@ -26,11 +26,13 @@ test('dist contém HTML com CSS inline, JS local, CNAME, robots e sitemap', () =
 
 test('nenhum marcador de pré-renderização sobrou e o conteúdo está no HTML inicial', () => {
   assert.doesNotMatch(html, /<!--@/);
-  assert.equal((html.match(/<accessible-pie /g) ?? []).length, 4);
+  assert.equal((html.match(/<accessible-pie /g) ?? []).length, 1, 'uma pizza: as espécies ameaçadas');
+  assert.equal((html.match(/<accessible-bars /g) ?? []).length, 4, 'barras: categorias, grupos e biomas; colunas: ameaça por grupo');
   assert.match(html, /15\.974/);
   assert.match(html, /Peixes continentais/);
   assert.match(html, /Mata Atlântica/);
-  assert.equal((html.match(/<table class="data-table"/g) ?? []).length, 4 + 10 + 7, 'tabelas dos 4 gráficos + todos os grupos + todos os biomas');
+  assert.equal((html.match(/<table class="data-table"/g) ?? []).length, 5 + 10 + 7, 'tabelas dos 5 gráficos + todos os grupos + todos os biomas');
+  assert.doesNotMatch(html.replace(/<table[\s\S]*?<\/table>/g, '').replace(/<p class="pie-summary"[\s\S]*?<\/p>/g, ''), /15\.410|15\.781/, 'a nota dos totais é neutra');
 });
 
 test('o documento não carrega nada de terceiros', () => {
